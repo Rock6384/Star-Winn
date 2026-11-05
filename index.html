@@ -1,0 +1,368 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Tiranga - Official Game Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1c2752;
+      --card-bg: #223168;
+      --card-dark: #192348;
+      --green: #10b981;
+      --red: #f43f5e;
+      --violet: #b55fe6;
+      --gold: #f59e0b;
+      --tab-active: #2b7fff;
+      --text-muted: #9aa8cf;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: #0f162e; color: #fff; display: flex; justify-content: center; }
+    .app { width: 100%; max-width: 440px; min-height: 100vh; background: var(--bg); padding-bottom: 75px; position: relative; }
+
+    /* Top Nav */
+    .nav { background: #182247; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #233166; position: sticky; top: 0; z-index: 40; }
+    .brand-logo { font-size: 22px; font-weight: 900; font-style: italic; color: #38bdf8; letter-spacing: 0.5px; }
+    .nav-actions { display: flex; gap: 12px; align-items: center; }
+    .icon-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; }
+
+    /* User Profile Bar */
+    .user-strip { background: linear-gradient(90deg, #1d2c60, #152047); padding: 10px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #27376d; font-size: 12px; }
+    .user-info b { color: var(--gold); }
+    .auth-btn { background: #3b82f6; border: none; padding: 4px 12px; border-radius: 14px; color: white; font-size: 11px; font-weight: 700; cursor: pointer; }
+
+    /* Wallet Card */
+    .wallet-card { background: var(--card-bg); margin: 12px 14px; border-radius: 16px; padding: 16px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border: 1px solid #2e4185; }
+    .bal-title { font-size: 13px; color: var(--text-muted); }
+    .bal-num { font-size: 26px; font-weight: 900; margin: 4px 0 14px; color: #ffffff; }
+    .wallet-actions { display: flex; gap: 10px; }
+    .btn-w { flex: 1; padding: 10px 0; border: none; border-radius: 25px; font-size: 14px; font-weight: 800; color: #fff; cursor: pointer; }
+    .btn-with { background: #ea384d; }
+    .btn-dep { background: #10b981; }
+
+    /* Mode Tabs */
+    .mode-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 12px 14px; }
+    .tab-item { background: var(--card-dark); border-radius: 12px; padding: 10px 4px; text-align: center; border: 1px solid #2a3c7a; cursor: pointer; }
+    .tab-item.active { background: var(--tab-active); border-color: #60a5fa; box-shadow: 0 0 12px rgba(43, 127, 255, 0.4); }
+    .tab-icon { font-size: 16px; margin-bottom: 4px; }
+    .tab-title { font-size: 11px; font-weight: 700; line-height: 1.2; }
+
+    /* Ticket Box */
+    .ticket-box { background: var(--card-bg); margin: 12px 14px; border-radius: 16px; padding: 14px; border: 1px solid #2e4185; }
+    .ticket-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .how-play { background: rgba(255,255,255,0.08); font-size: 11px; padding: 4px 10px; border-radius: 20px; color: var(--text-muted); }
+    .timer-wrap { text-align: right; }
+    .timer-lbl { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+    .timer-digits { display: flex; gap: 3px; justify-content: flex-end; }
+    .t-digit { background: #131c3a; color: #fff; font-size: 18px; font-weight: 900; padding: 4px 6px; border-radius: 4px; min-width: 22px; text-align: center; border: 1px solid #2a3a69; }
+
+    .ticket-btm { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #34488f; padding-top: 10px; }
+    .recent-balls { display: flex; gap: 4px; }
+    .mini-ball { width: 22px; height: 22px; border-radius: 50%; font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center; color: #fff; }
+    .period-live { font-size: 13px; font-weight: 800; color: #cbd5e1; letter-spacing: 0.5px; }
+
+    /* Bet Section */
+    .bet-container { background: var(--card-bg); margin: 12px 14px; border-radius: 16px; padding: 14px; border: 1px solid #2e4185; position: relative; }
+    .colors-group { display: flex; gap: 8px; margin-bottom: 14px; }
+    .c-btn { flex: 1; padding: 11px 0; border: none; border-radius: 8px; font-size: 14px; font-weight: 800; color: #fff; cursor: pointer; }
+    .bg-green { background: var(--green); }
+    .bg-violet { background: var(--violet); }
+    .bg-red { background: var(--red); }
+
+    .balls-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px 6px; justify-items: center; margin-bottom: 14px; }
+    .ball-wrap { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; cursor: pointer; border: 2px solid rgba(255,255,255,0.25); }
+    .b-0 { background: linear-gradient(135deg, var(--red) 50%, var(--violet) 50%); }
+    .b-5 { background: linear-gradient(135deg, var(--green) 50%, var(--violet) 50%); }
+    .b-red { background: var(--red); }
+    .b-green { background: var(--green); }
+    .ball-inner { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; color: #fff; }
+
+    .size-group { display: flex; gap: 8px; }
+    .btn-s { flex: 1; padding: 12px 0; border: none; border-radius: 25px; font-size: 15px; font-weight: 800; color: #fff; cursor: pointer; }
+    .btn-big { background: #eab308; }
+    .btn-small { background: #3b82f6; }
+
+    .mask-panel { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 22, 46, 0.94); border-radius: 16px; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 50; }
+    .mask-count { font-size: 90px; font-weight: 900; color: #f43f5e; text-shadow: 0 0 25px rgba(244, 63, 94, 0.6); }
+    .mask-text { font-size: 13px; font-weight: 800; color: var(--gold); letter-spacing: 1px; }
+
+    /* History Table */
+    .history-card { background: var(--card-bg); margin: 12px 14px; border-radius: 16px; padding: 14px; border: 1px solid #2e4185; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th { text-align: left; padding: 8px 4px; color: var(--text-muted); font-size: 11px; }
+    td { padding: 9px 4px; border-bottom: 1px solid #28396e; }
+    .res-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; vertical-align: middle; }
+
+    /* Bottom Navbar */
+    .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 440px; background: #131b38; border-top: 1px solid #233166; display: flex; justify-content: space-around; padding: 8px 0; z-index: 60; }
+    .b-item { text-align: center; color: var(--text-muted); font-size: 10px; cursor: pointer; flex: 1; }
+    .b-item.active { color: #38bdf8; font-weight: 700; }
+    .b-icon { font-size: 18px; margin-bottom: 2px; }
+
+    /* Modal Popups (Auth & Service) */
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.75); display: none; justify-content: center; align-items: flex-end; z-index: 100; }
+    .modal-sheet { background: #182247; width: 100%; max-width: 440px; border-radius: 20px 20px 0 0; padding: 20px; border-top: 2px solid #38bdf8; max-height: 85vh; overflow-y: auto; }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; }
+    .modal-title { font-size: 17px; font-weight: 800; color: #fff; }
+    .btn-close { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; }
+
+    /* Auth Form */
+    .tab-switch { display: flex; gap: 10px; margin-bottom: 16px; border-bottom: 1px solid #2e4185; padding-bottom: 8px; }
+    .sw-btn { flex: 1; padding: 8px; border: none; background: none; color: var(--text-muted); font-weight: 700; font-size: 14px; cursor: pointer; text-align: center; }
+    .sw-btn.active { color: #38bdf8; border-bottom: 2px solid #38bdf8; }
+    .input-field { width: 100%; padding: 12px; background: #101833; border: 1px solid #2e4185; border-radius: 8px; color: #fff; font-size: 14px; margin-bottom: 12px; outline: none; }
+    .btn-submit { width: 100%; padding: 12px; background: linear-gradient(90deg, #2563eb, #38bdf8); border: none; border-radius: 8px; color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; margin-top: 6px; }
+
+    /* Service Grid */
+    .service-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 10px; }
+    .service-card { background: #121936; border: 1px solid #28396e; border-radius: 10px; padding: 14px; text-align: center; cursor: pointer; }
+    .service-card h4 { font-size: 13px; margin: 6px 0 2px; color: #fff; }
+    .service-card p { font-size: 10px; color: var(--text-muted); }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <!-- Top Nav -->
+    <div class="nav">
+      <div class="brand-logo">Tiranga</div>
+      <div class="nav-actions">
+        <div class="icon-btn" onclick="openService()" title="Customer Service">🎧</div>
+        <div class="icon-btn" onclick="openAuth()" title="Login / Register">👤</div>
+      </div>
+    </div>
+
+    <!-- Active User Bar -->
+    <div class="user-strip">
+      <div class="user-info" id="userStatus">User: <b id="userName">Demo Guest</b> (ID: 984521)</div>
+      <button class="auth-btn" id="authActionBtn" onclick="openAuth()">Login / Sign Up</button>
+    </div>
+
+    <!-- Wallet -->
+    <div class="wallet-card">
+      <div class="bal-title">₹ Wallet balance</div>
+      <div class="bal-num" id="walletBal">₹ 1,000.00</div>
+      <div class="wallet-actions">
+        <button class="btn-w btn-with" onclick="handleWithdraw()">Withdraw</button>
+        <button class="btn-w btn-dep" onclick="handleDeposit()">Deposit</button>
+      </div>
+    </div>
+
+    <!-- Mode Tabs -->
+    <div class="mode-tabs">
+      <div class="tab-item active"><div class="tab-icon">⏱️</div><div class="tab-title">WinGo<br>30sec</div></div>
+      <div class="tab-item" onclick="alert('Switching to 1Min mode...')"><div class="tab-icon">⏱️</div><div class="tab-title">WinGo<br>1 Min</div></div>
+      <div class="tab-item" onclick="alert('Switching to 3Min mode...')"><div class="tab-icon">⏱️</div><div class="tab-title">WinGo<br>3 Min</div></div>
+      <div class="tab-item" onclick="alert('Switching to 5Min mode...')"><div class="tab-icon">⏱️</div><div class="tab-title">WinGo<br>5 Min</div></div>
+    </div>
+
+    <!-- Ticket Box -->
+    <div class="ticket-box">
+      <div class="ticket-top">
+        <div>
+          <span class="how-play" onclick="openService()">📖 How to play</span>
+          <div style="font-size: 12px; font-weight: 700; margin-top: 8px; color: var(--text-muted);">WinGo 30sec</div>
+        </div>
+        <div class="timer-wrap">
+          <div class="timer-lbl">Time remaining</div>
+          <div class="timer-digits">
+            <div class="t-digit">0</div>
+            <div class="t-digit">0</div>
+            <div style="font-size: 16px; font-weight: 900; align-self: center; margin: 0 1px;">:</div>
+            <div class="t-digit" id="tSec1">1</div>
+            <div class="t-digit" id="tSec2">0</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="ticket-btm">
+        <div class="recent-balls" id="recentBalls"></div>
+        <div class="period-live" id="livePeriod">----------------</div>
+      </div>
+    </div>
+
+    <!-- Bet Section with Mask -->
+    <div class="bet-container">
+      <div class="mask-panel" id="maskBox">
+        <div class="mask-count" id="maskVal">5</div>
+        <div class="mask-text">WAITING FOR DRAW...</div>
+      </div>
+
+      <div class="colors-group">
+        <button class="c-btn bg-green" onclick="placeBet('Green')">Green</button>
+        <button class="c-btn bg-violet" onclick="placeBet('Violet')">Violet</button>
+        <button class="c-btn bg-red" onclick="placeBet('Red')">Red</button>
+      </div>
+
+      <div class="balls-grid">
+        <div class="ball-wrap b-0" onclick="placeBet('0')"><div class="ball-inner">0</div></div>
+        <div class="ball-wrap b-green" onclick="placeBet('1')"><div class="ball-inner">1</div></div>
+        <div class="ball-wrap b-red" onclick="placeBet('2')"><div class="ball-inner">2</div></div>
+        <div class="ball-wrap b-green" onclick="placeBet('3')"><div class="ball-inner">3</div></div>
+        <div class="ball-wrap b-red" onclick="placeBet('4')"><div class="ball-inner">4</div></div>
+        <div class="ball-wrap b-5" onclick="placeBet('5')"><div class="ball-inner">5</div></div>
+        <div class="ball-wrap b-red" onclick="placeBet('6')"><div class="ball-inner">6</div></div>
+        <div class="ball-wrap b-green" onclick="placeBet('7')"><div class="ball-inner">7</div></div>
+        <div class="ball-wrap b-red" onclick="placeBet('8')"><div class="ball-inner">8</div></div>
+        <div class="ball-wrap b-green" onclick="placeBet('9')"><div class="ball-inner">9</div></div>
+      </div>
+
+      <div class="size-group">
+        <button class="btn-s btn-big" onclick="placeBet('Big')">Big</button>
+        <button class="btn-s btn-small" onclick="placeBet('Small')">Small</button>
+      </div>
+    </div>
+
+    <!-- History -->
+    <div class="history-card">
+      <div style="font-weight: 800; font-size: 13px; color: var(--text-muted); margin-bottom: 10px;">Game history</div>
+      <table>
+        <thead>
+          <tr>
+            <th>Period</th>
+            <th>Number</th>
+            <th>Big Small</th>
+            <th>Color</th>
+          </tr>
+        </thead>
+        <tbody id="historyRows"></tbody>
+      </table>
+    </div>
+
+    <!-- Bottom Nav -->
+    <div class="bottom-nav">
+      <div class="b-item active"><div class="b-icon">🏠</div>Home</div>
+      <div class="b-item" onclick="openService()"><div class="b-icon">🎁</div>Activity</div>
+      <div class="b-item" onclick="openService()"><div class="b-icon">📢</div>Promotion</div>
+      <div class="b-item" onclick="handleDeposit()"><div class="b-icon">💳</div>Wallet</div>
+      <div class="b-item" onclick="openAuth()"><div class="b-icon">👤</div>Account</div>
+    </div>
+
+    <!-- LOGIN / REGISTER MODAL -->
+    <div class="modal-overlay" id="authModal">
+      <div class="modal-sheet">
+        <div class="modal-head">
+          <div class="modal-title" id="authHeading">Login to Tiranga</div>
+          <button class="btn-close" onclick="closeAuth()">✕</button>
+        </div>
+        <div class="tab-switch">
+          <button class="sw-btn active" id="tabLogin" onclick="switchAuth('login')">Log In</button>
+          <button class="sw-btn" id="tabReg" onclick="switchAuth('register')">Register</button>
+        </div>
+        <div>
+          <input type="tel" class="input-field" id="authPhone" maxlength="10" placeholder="Mobile phone number (+91)">
+          <input type="password" class="input-field" id="authPass" placeholder="Set / Enter Password">
+          <div id="inviteBox" style="display: none;">
+            <input type="text" class="input-field" placeholder="Invitation Code (Optional: 984521)">
+          </div>
+          <button class="btn-submit" onclick="submitAuth()">Confirm</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- CUSTOMER SELF SERVICE MODAL -->
+    <div class="modal-overlay" id="serviceModal">
+      <div class="modal-sheet">
+        <div class="modal-head">
+          <div class="modal-title">🎧 24x7 Self-Service Center</div>
+          <button class="btn-close" onclick="closeService()">✕</button>
+        </div>
+        <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 12px;">Choose an issue for instant automated assistance:</div>
+        <div class="service-grid">
+          <div class="service-card" onclick="alert('Connecting to 24x7 Live Chat Agent...')">
+            <div style="font-size: 24px;">💬</div>
+            <h4>Live Chat</h4>
+            <p>24x7 Online Support</p>
+          </div>
+          <div class="service-card" onclick="alert('Self-Service: Deposit issue verification initiated. Please upload UTR receipt.')">
+            <div style="font-size: 24px;">💰</div>
+            <h4>Deposit Issue</h4>
+            <p>UTR Auto Verification</p>
+          </div>
+          <div class="service-card" onclick="alert('Self-Service: Withdrawal verification processing. Bank account check.')">
+            <div style="font-size: 24px;">🏦</div>
+            <h4>Withdrawal Issue</h4>
+            <p>Bank Status Check</p>
+          </div>
+          <div class="service-card" onclick="alert('Password Reset Link sent to registered mobile number.')">
+            <div style="font-size: 24px;">🔑</div>
+            <h4>Reset Password</h4>
+            <p>Account Security</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let bal = 1000;
+    let currentUser = null;
+    let authMode = 'login';
+    let knownPeriods = new Set();
+
+    function handleDeposit() {
+      const amt = prompt("Enter Deposit Amount (INR):", "500");
+      if (amt && !isNaN(amt)) {
+        bal += parseFloat(amt);
+        document.getElementById('walletBal').innerText = "₹ " + bal.toFixed(2);
+        alert("Deposit Successful! Added ₹" + amt);
+      }
+    }
+
+    function handleWithdraw() {
+      if (!currentUser) {
+        alert("Please login first to withdraw funds!");
+        openAuth();
+        return;
+      }
+      const amt = prompt("Enter Withdrawal Amount:", "500");
+      if (amt && !isNaN(amt)) {
+        if (parseFloat(amt) > bal) {
+          alert("Insufficient Balance!");
+          return;
+        }
+        bal -= parseFloat(amt);
+        document.getElementById('walletBal').innerText = "₹ " + bal.toFixed(2);
+        alert("Withdrawal Request Submitted for ₹" + amt);
+      }
+    }
+
+    function placeBet(type) {
+      if (bal < 10) { alert("Balance low! Please deposit."); return; }
+      bal -= 10;
+      document.getElementById('walletBal').innerText = "₹ " + bal.toFixed(2);
+      alert("Bet placed on: " + type);
+    }
+
+    // Auth Modals
+    function openAuth() { document.getElementById('authModal').style.display = 'flex'; }
+    function closeAuth() { document.getElementById('authModal').style.display = 'none'; }
+    function openService() { document.getElementById('serviceModal').style.display = 'flex'; }
+    function closeService() { document.getElementById('serviceModal').style.display = 'none'; }
+
+    function switchAuth(mode) {
+      authMode = mode;
+      if (mode === 'login') {
+        document.getElementById('tabLogin').classList.add('active');
+        document.getElementById('tabReg').classList.remove('active');
+        document.getElementById('authHeading').innerText = "Login to Tiranga";
+        document.getElementById('inviteBox').style.display = 'none';
+      } else {
+        document.getElementById('tabReg').classList.add('active');
+        document.getElementById('tabLogin').classList.remove('active');
+        document.getElementById('authHeading').innerText = "Register New Account";
+        document.getElementById('inviteBox').style.display = 'block';
+      }
+    }
+
+    function submitAuth() {
+      const phone = document.getElementById('authPhone').value.trim();
+      const pass = document.getElementById('authPass').value.trim();
+      if (phone.length < 10 || !pass) {
+        alert("Please enter valid 10-digit mobile number and password!");
+        return;
+      }
+      currentUser = phone;
+      document.getElementById('userName').innerText = "+91 " + phone.substring(0, 5) + "*****";
+      document.getElementById('authActionBtn')
