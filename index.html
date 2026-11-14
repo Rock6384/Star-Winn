@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>StarWinn - Official WinGo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;-webkit-tap-highlight-color:transparent}
+body{background:#0b1124;color:#fff;display:flex;justify-content:center}
+.app{width:100%;max-width:440px;min-height:100vh;background:#172147;padding-bottom:85px;position:relative}
+.nav{background:#131b3b;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #25346e;position:sticky;top:0;z-index:40}
+.logo{font-size:22px;font-weight:900;font-style:italic;color:#fbbf24}
+.icons{display:flex;gap:10px}
+.ibtn{background:#23326b;border:1px solid #354996;color:#fff;width:35px;height:35px;border-radius:50%;font-size:16px;cursor:pointer}
+.page{display:none}.page.active{display:block}
+.ustrip{background:#111938;padding:9px 16px;display:flex;justify-content:space-between;align-items:center;font-size:12px;border-bottom:1px solid #223066}
+.abtn{background:#2b7fff;border:none;padding:5px 12px;border-radius:14px;color:#fff;font-weight:700;cursor:pointer;font-size:11px}
+.wcard{background:linear-gradient(135deg,#243573,#1b2859);margin:12px;border-radius:16px;padding:18px;text-align:center;border:1px solid #354c9e}
+.bal{font-size:30px;font-weight:900;margin:6px 0 14px}
+.wbtns{display:flex;gap:12px}
+.bw{flex:1;padding:11px;border:none;border-radius:25px;font-weight:800;font-size:14px;color:#fff;cursor:pointer}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:12px}
+.tab{background:#121a3b;border-radius:12px;padding:10px 4px;text-align:center;font-size:11px;font-weight:700;border:1px solid #263675;cursor:pointer;color:#9aa8cf}
+.tab.active{background:#2b7fff;border-color:#60a5fa;color:#fff}
+.tbox{background:#202f66;margin:12px;border-radius:16px;padding:14px;border:1px solid #314694}
+.ttop{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px}
+.tdigits{display:flex;gap:3px}
+.td{background:#0f1633;padding:5px 8px;border-radius:5px;font-size:19px;font-weight:900;border:1px solid #28397a}
+.tbtm{display:flex;justify-content:space-between;align-items:center;border-top:1px dashed #3b52a6;padding-top:10px}
+.rballs{display:flex;gap:5px}
+.mball{width:24px;height:24px;border-radius:50%;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.betbox{background:#202f66;margin:12px;border-radius:16px;padding:14px;border:1px solid #314694;position:relative}
+.cgrp{display:flex;gap:8px;margin-bottom:14px}
+.cbtn{flex:1;padding:12px;border:none;border-radius:8px;font-weight:800;font-size:14px;color:#fff;cursor:pointer}
+.bgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px 6px;justify-items:center;margin-bottom:14px}
+.ball{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;cursor:pointer;border:2px solid rgba(255,255,255,.35)}
+.sgrp{display:flex;gap:10px}
+.sbtn{flex:1;padding:12px;border:none;border-radius:25px;font-weight:800;font-size:15px;color:#fff;cursor:pointer}
+.mask{position:absolute;inset:0;background:rgba(12,18,41,.95);border-radius:16px;display:none;flex-direction:column;justify-content:center;align-items:center;z-index:20}
+.mnum{font-size:85px;font-weight:900;color:#f43f5e}
+.hcard{background:#202f66;margin:12px;border-radius:16px;padding:14px;border:1px solid #314694}
+.htabs{display:flex;gap:8px;margin-bottom:12px}
+.htab{flex:1;text-align:center;padding:8px;font-size:13px;font-weight:800;border-radius:8px;cursor:pointer;background:#131c3d;color:#9aa8cf}
+.htab.active{background:#2b7fff;color:#fff}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th{color:#9aa8cf;font-size:11px;padding:8px 4px;text-align:left;border-bottom:1px solid #314694}
+td{padding:9px 4px;border-bottom:1px solid #263675}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.acc-header{background:linear-gradient(135deg,#25387a,#16224f);padding:20px 16px;border-bottom:1px solid #344ca3}
+.acc-top{display:flex;align-items:center;gap:14px}
+.avatar{width:58px;height:58px;border-radius:50%;background:linear-gradient(135deg,#fbbf24,#f59e0b);display:flex;align-items:center;justify-content:center;font-size:26px;color:#000;border:2px solid #fff}
+.vip-badge{background:#fbbf24;color:#000;font-size:10px;font-weight:900;padding:2px 8px;border-radius:10px;margin-left:6px}
+.acc-bal-box{background:#131c3d;border-radius:14px;padding:14px;margin-top:16px;border:1px solid #2d4087}
+.acc-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px}
+.acc-card{background:#202f66;border:1px solid #314694;border-radius:12px;padding:14px;display:flex;align-items:center;gap:10px;cursor:pointer}
+.menu-list{background:#202f66;margin:12px;border-radius:14px;border:1px solid #314694}
+.menu-row{padding:14px 16px;display:flex;justify-content:space-between;border-bottom:1px solid #293b7d;font-size:14px;font-weight:600;cursor:pointer}
+.bnav{position:fixed;bottom:0;width:100%;max-width:440px;background:#101733;display:flex;padding:8px 0;border-top:1px solid #263675;z-index:50}
+.bi{flex:1;text-align:center;font-size:11px;color:#9aa8cf;cursor:pointer}
+.bi.active{color:#38bdf8;font-weight:800}
+.bi span{display:block;font-size:18px;margin-bottom:2px}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;justify-content:center;align-items:flex-end;z-index:100}
+.sheet{background:#182247;width:100%;max-width:440px;border-radius:20px 20px 0 0;padding:20px;border-top:2px solid #38bdf8;max-height:85vh;overflow-y:auto}
+.inp{width:100%;padding:12px;background:#0f1633;border:1px solid #2e4185;border-radius:8px;color:#fff;margin-bottom:10px;font-size:14px}
+.sub{width:100%;padding:13px;background:#2b7fff;border:none;border-radius:10px;color:#fff;font-weight:800;font-size:15px;cursor:pointer}
+.agrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.chip{background:#0f1633;border:1px solid #2e4185;padding:10px;border-radius:8px;text-align:center;font-weight:700;cursor:pointer}
+.chip.active{background:#2b7fff}
+.winpop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:300px;background:#182247;border:2px solid #fbbf24;border-radius:20px;padding:24px;text-align:center;z-index:200;display:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="nav">
+    <div class="logo">StarWinn</div>
+    <div class="icons">
+      <button type="button" class="ibtn" id="btnTopServ">🎧</button>
+      <button type="button" class="ibtn" id="btnTopAcc">👤</button>
+    </div>
+  </div>
+
+  <!-- HOME PAGE -->
+  <div class="page active" id="page-home">
+    <div class="ustrip">
+      <div>User: <b id="uname" style="color:#fbbf24">Star Player</b> (UID: 984521)</div>
+      <button type="button" class="abtn" id="abtn">Login / OTP</button>
+    </div>
+    <div class="wcard">
+      <div style="font-size:12px;color:#9aa8cf">₹ Total Wallet Balance</div>
+      <div class="bal" id="bal">₹ 1,000.00</div>
+      <div class="wbtns">
+        <button type="button" class="bw" style="background:#ea384d" id="btnWith1">Withdraw</button>
+        <button type="button" class="bw" style="background:#10b981" id="btnDep1">Deposit</button>
+      </div>
+    </div>
+    <div class="tabs">
+      <div class="tab active" data-sec="30">⏱️<br>WinGo 30s</div>
+      <div class="tab" data-sec="60">⏱️<br>WinGo 1m</div>
+      <div class="tab" data-sec="180">⏱️<br>WinGo 3m</div>
+      <div class="tab" data-sec="300">⏱️<br>WinGo 5m</div>
+    </div>
+    <div class="tbox">
+      <div class="ttop">
+        <div>
+          <span id="btnRules" style="background:rgba(255,255,255,.1);padding:4px 10px;border-radius:12px;font-size:11px;cursor:pointer">📖 How to play</span>
+          <div style="font-weight:800;margin-top:6px;font-size:14px" id="mlbl">WinGo 30sec</div>
+        </div>
+        <div style="text-align:right">
+          <div style="font-size:11px;color:#9aa8cf;margin-bottom:4px">Time remaining</div>
+          <div class="tdigits">
+            <div class="td" id="m1">0</div><div class="td" id="m2">0</div>
+            <div style="align-self:center;font-weight:900">:</div>
+            <div class="td" id="s1">3</div><div class="td" id="s2">0</div>
+          </div>
+        </div>
+      </div>
+      <div class="tbtm">
+        <div class="rballs" id="rballs"></div>
+        <div style="font-weight:800;font-size:13px;color:#cbd5e1" id="pid">----------------</div>
+      </div>
+    </div>
+    <div class="betbox">
+      <div class="mask" id="mask"><div class="mnum" id="mval">5</div><div style="color:#fbbf24;font-weight:800;font-size:12px">WAITING FOR DRAW...</div></div>
+      <div class="cgrp">
+        <button type="button" class="cbtn bet-trig" data-val="Green" data-col="#10b981" style="background:#10b981">Green</button>
+        <button type="button" class="cbtn bet-trig" data-val="Violet" data-col="#b55fe6" style="background:#b55fe6">Violet</button>
+        <button type="button" class="cbtn bet-trig" data-val="Red" data-col="#f43f5e" style="background:#f43f5e">Red</button>
+      </div>
+      <div class="bgrid">
+        <div class="ball bet-trig" data-val="0" data-col="#b55fe6" style="background:linear-gradient(135deg,#f43f5e 50%,#b55fe6 50%)">0</div>
+        <div class="ball bet-trig" data-val="1" data-col="#10b981" style="background:#10b981">1</div>
+        <div class="ball bet-trig" data-val="2" data-col="#f43f5e" style="background:#f43f5e">2</div>
+        <div class="ball bet-trig" data-val="3" data-col="#10b981" style="background:#10b981">3</div>
+        <div class="ball bet-trig" data-val="4" data-col="#f43f5e" style="background:#f43f5e">4</div>
+        <div class="ball bet-trig" data-val="5" data-col="#b55fe6" style="background:linear-gradient(135deg,#10b981 50%,#b55fe6 50%)">5</div>
+        <div class="ball bet-trig" data-val="6" data-col="#f43f5e" style="background:#f43f5e">6</div>
+        <div class="ball bet-trig" data-val="7" data-col="#10b981" style="background:#10b981">7</div>
+        <div class="ball bet-trig" data-val="8" data-col="#f43f5e" style="background:#f43f5e">8</div>
+        <div class="ball bet-trig" data-val="9" data-col="#10b981" style="background:#10b981">9</div>
+      </div>
+      <div class="sgrp">
+        <button type="button" class="sbtn bet-trig" data-val="Big" data-col="#eab308" style="background:#eab308">Big</button>
+        <button type="button" class="sbtn bet-trig" data-val="Small" data-col="#3b82f6" style="background:#3b82f6">Small</button>
+      </div>
+    </div>
+    <div class="hcard">
+      <div class="htabs">
+        <div class="htab active" id="th1">Game history (10)</div>
+        <div class="htab" id="th2">My bets</div>
+      </div>
+      <div id="hb1"><table><thead><tr><th>Period</th><th>Number</th><th>Big/Small</th><th>Color</th></tr></thead><tbody id="hrows"></tbody></table></div>
+      <div id="hb2" style="display:none"><table><thead><tr><th>Period</th><th>Select</th><th>Amount</th><th>Status</th></tr></thead><tbody id="myrows"><tr><td colspan="4" style="text-align:center;color:#9aa8cf;padding:14px">No bets placed yet</td></tr></tbody></table></div>
+    </div>
+  </div>
+
+  <!-- ACCOUNT PAGE -->
+  <div class="page" id="page-account">
+    <div class="acc-header">
+      <div class="acc-top">
+        <div class="avatar">👑</div>
+        <div>
+          <div style="font-size:17px;font-weight:900"><span id="accName">Star Player</span><span class="vip-badge">VIP 2</span></div>
+          <div style="font-size:11px;color:#cbd5e1;margin-top:4px">UID | 984521</div>
+          <div style="font-size:11px;color:#9aa8cf;margin-top:2px" id="accPhone">Mobile: Not Verified</div>
+        </div>
+      </div>
+      <div class="acc-bal-box">
+        <div style="font-size:12px;color:#9aa8cf">Total Balance</div>
+        <div style="font-size:24px;font-weight:900;margin:4px 0 12px" id="accBal">₹ 1,000.00</div>
+        <div style="display:flex;gap:10px">
+          <button type="button" class="bw" style="background:#10b981;padding:9px" id="btnDep2">💳 Deposit</button>
+          <button type="button" class="bw" style="background:#ea384d;padding:9px" id="btnWith2">🏦 Withdraw</button>
+        </div>
+      </div>
+    </div>
+    <div class="acc-grid">
+      <div class="acc-card rec-trig" data-rec="bets"><div style="font-size:22px">🎲</div><div><div style="font-size:13px;font-weight:700">Bet History</div><div style="font-size:10px;color:#9aa8cf">My game bets</div></div></div>
+      <div class="acc-card rec-trig" data-rec="trans"><div style="font-size:22px">📊</div><div><div style="font-size:13px;font-weight:700">Transaction</div><div style="font-size:10px;color:#9aa8cf">Wallet logs</div></div></div>
+      <div class="acc-card rec-trig" data-rec="deposit"><div style="font-size:22px">📥</div><div><div style="font-size:13px;font-weight:700">Deposit History</div><div style="font-size:10px;color:#9aa8cf">Recharge status</div></div></div>
+      <div class="acc-card rec-trig" data-rec="withdraw"><div style="font-size:22px">📤</div><div><div style="font-size:13px;font-weight:700">Withdraw History</div><div style="font-size:10px;color:#9aa8cf">Payout records</div></div></div>
+    </div>
+    <div class="menu-list">
+      <div class="menu-row" id="mGift"><span>🎁 Gift Code Redeem</span><span style="color:#fbbf24">Claim ➔</span></div>
+      <div class="menu-row" id="mVip"><span>👑 VIP Club Privileges</span><span style="color:#9aa8cf">VIP 2 ➔</span></div>
+      <div class="menu-row" id="mServ"><span>🎧 24/7 Customer Service</span><span style="color:#10b981">Online ➔</span></div>
+      <div class="menu-row" id="mAuth"><span>🔐 Login / Verify OTP</span><span style="color:#38bdf8">Open ➔</span></div>
+      <div class="menu-row" id="mOut" style="color:#f43f5e"><span>🚪 Log Out</span><span>➔</span></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bnav">
+    <div class="bi active" id="nav-home"><span>🏠</span>Home</div>
+    <div class="bi" id="nav-act"><span>🎁</span>Activity</div>
+    <div class="bi" id="nav-wal"><span>💳</span>Wallet</div>
+    <div class="bi" id="nav-acc"><span>👤</span>Account</div>
+  </div>
+</div>
+
+<!-- BET MODAL -->
+<div class="modal" id="betM">
+  <div class="sheet">
+    <div id="bban" style="padding:12px;border-radius:10px;text-align:center;font-weight:800;margin-bottom:12px">Select</div>
+    <div style="font-size:12px;color:#9aa8cf">Select Amount (₹)</div>
+    <div class="agrid">
+      <div class="chip active" data-amt="10">₹10</div>
+      <div class="chip" data-amt="50">₹50</div>
+      <div class="chip" data-amt="100">₹100</div>
+      <div class="chip" data-amt="500">₹500</div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:14px">
+      <button type="button" class="sub" style="background:#334155;flex:1" id="btnCancelBet">Cancel</button>
+      <button type="button" class="sub" style="flex:2" id="cbtn">Confirm ₹10</button>
+    </div>
+  </div>
+</div>
+
+<!-- OTP LOGIN MODAL -->
+<div class="modal" id="authM">
+  <div class="sheet">
+    <div style="display:flex;justify-content:space-between;margin-bottom:14px"><b>🔐 StarWinn OTP Login / Register</b><span class="close-m" data-m="authM" style="cursor:pointer;font-size:18px">✕</span></div>
+    <input class="inp" id="ph" maxlength="10" placeholder="Enter 10-digit Mobile Number">
+    <div style="display:flex;gap:8px;margin-bottom:10px">
+      <input class="inp" id="otpInp" maxlength="4" placeholder="4-digit OTP" style="margin-bottom:0">
+      <button type="button" id="btnSendOtp" style="background:#f59e0b;color:#000;border:none;border-radius:8px;padding:0 14px;font-weight:800;cursor:pointer">Send OTP</button>
+    </div>
+    <input class="inp" type="password" id="pw" placeholder="Set / Enter Password">
+    <button type="button" class="sub" id="btnVerify">Verify OTP & Login</button>
+  </div>
+</div>
+
+<!-- GIFT MODAL -->
+<div class="modal" id="giftM">
+  <div class="sheet">
+    <div style="display:flex;justify-content:space-between;margin-bottom:12px"><b>🎁 Redeem Gift Code</b><span class="close-m" data-m="giftM" style="cursor:pointer;font-size:18px">✕</span></div>
+    <p style="font-size:12px;color:#9aa8cf;margin-bottom:10px">Enter Bonus Code (Try: <b style="color:#fbbf24">STAR100</b>)</p>
+    <input class="inp" id="giftInp" placeholder="Enter Gift Code">
+    <button type="button" class="sub" style="background:#f59e0b;color:#000" id="btnClaim">Redeem Now</button>
+  </div>
+</div>
+
+<!-- SERVICE MODAL -->
+<div class="modal" id="servM">
+  <div class="sheet">
+    <div style="display:flex;justify-content:space-between;margin-bottom:14px"><b>🎧 24/7 Customer Service</b><span class="close-m" data-m="servM" style="cursor:pointer;font-size:18px">✕</span></div>
+    <button type="button" class="sub" style="margin-bottom:8px;background:#223168;text-align:left" onclick="alert('Live Agent Connected!')">💬 Live Online Chat Support</button>
+    <button type="button" class="sub" style="margin-bottom:8px;background:#223168;text-align:left" onclick="alert('UPI Deposits auto-credit in 2 mins.')">💰 Deposit Issue Check</button>
+    <button type="button" class="sub" style="background:#223168;text-align:left" onclick="alert('Instant Bank Withdrawal active.')">🏦 Withdrawal Status Check</button>
+  </div>
+</div>
+
+<!-- RECORDS MODAL -->
+<div class="modal" id="recM">
+  <div class="sheet">
+    <div style="display:flex;justify-content:space-between;margin-bottom:12px"><b id="recTitle">Records</b><span class="close-m" data-m="recM" style="cursor:pointer;font-size:18px">✕</span></div>
+    <div id="recBody" style="max-height:300px;overflow-y:auto"></div>
+  </div>
+</div>
+
+<!-- WIN POPUP -->
+<div class="winpop" id="wpop">
+  <div style="font-size:44px" id="wico">🏆</div>
+  <div style="font-size:21px;font-weight:900;margin:6px 0" id="wtit">CONGRATULATIONS!</div>
+  <div style="font-size:12px;color:#9aa8cf" id="wdet"></div>
+  <div style="font-size:26px;font-weight:900;color:#fbbf24;margin:10px 0 14px" id="wamt"></div>
+  <button type="button" class="sub" id="btnCloseWin">Collect</button>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", function() {
+  let bal = 1000.00, mode = 30, curP = "", lastP = "", sel = "", amt = 10, genOTP = "";
+  let user = localStorage.getItem('sw_user') || null;
+  let bets = [], deposits = [{date:'Today', amt:1000, status:'Success'}], withdraws = [], trans = [{type:'Welcome Bonus', amt:'+₹1000.00', color:'#10b981'}];
+
+  function uBal() {
+    document.getElementById('bal').innerText = "₹ " + bal.toFixed(2);
+    document.getElementById('accBal').innerText = "₹ " + bal.toFixed(2);
+  }
+  function initUser() {
+    if (user) {
+      let m = "+91 " + user.slice(0,5) + "*****";
+      document.getElementById('uname').innerText = m;
+      document.getElementById('accName').innerText = "Player_" + user.slice(-4);
+      document.getElementById('accPhone').innerText = "Mobile: " + m + " (Verified ✅)";
+      document.getElementById('abtn').innerText = "Verified ✅";
+    }
+  }
+  function goPage(p) {
+    document.querySelectorAll('.page').forEach(e => e.classList.remove('active'));
+    document.getElementById('page-' + p).classList.add('active');
+    document.getElementById('nav-home').classList.toggle('active', p === 'home');
+    document.getElementById('nav-acc').classList.toggle('active', p === 'account');
+    window.scrollTo(0, 0);
+  }
+  function openM(id) { document.getElementById(id).style.display = 'flex'; }
+  function closeM(id) { document.getElementById(id).style.display = 'none'; }
+
+  document.querySelectorAll('.close-m').forEach(el => el.addEventListener('click', () => closeM(el.dataset.m)));
+  document.getElementById('nav-home').addEventListener('click', () => goPage('home'));
+  document.getElementById('nav-acc').addEventListener('click', () => goPage('account'));
+  document.getElementById('btnTopAcc').addEventListener('click', () => goPage('account'));
+  document.getElementById('btnTopServ').addEventListener('click', () => o
