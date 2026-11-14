@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>StarWinn</title>
+<style>
+body{margin:0;background:#0b1124;color:#fff;font-family:sans-serif;display:flex;justify-content:center}
+.app{width:100%;max-width:440px;min-height:100vh;background:#172147;padding-bottom:75px}
+.box{background:#202f66;margin:12px;padding:16px;border-radius:14px;border:1px solid #314694}
+input{width:100%;padding:12px;margin:6px 0 12px;border-radius:8px;border:1px solid #3b52a6;background:#0f1633;color:#fff;font-size:15px;box-sizing:border-box}
+button{padding:12px;border:none;border-radius:8px;font-weight:bold;cursor:pointer;font-size:14px}
+.btn-full{width:100%;background:#2b7fff;color:#fff;border-radius:20px;font-size:16px}
+.grid5{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin:12px 0}
+.ball{height:46px;border-radius:50%;color:#fff;font-weight:900;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer}
+.nav{position:fixed;bottom:0;width:100%;max-width:440px;background:#101733;display:flex;padding:10px 0;border-top:1px solid #263675}
+.nav div{flex:1;text-align:center;font-size:12px;cursor:pointer}
+table{width:100%;border-collapse:collapse;font-size:12px;margin-top:8px}
+td,th{padding:8px 4px;border-bottom:1px solid #2a3c7a;text-align:left}
+</style>
+</head>
+<body>
+<div class="app">
+
+<!-- 1. LOGIN & REGISTER -->
+<div id="authDiv" style="padding:20px">
+  <h1 style="text-align:center;color:#fbbf24;font-style:italic">StarWinn</h1>
+  <div style="display:flex;gap:8px;margin:16px 0">
+    <button id="t1" style="flex:1;background:#2b7fff;color:#fff" onclick="modeAuth('reg')">Register</button>
+    <button id="t2" style="flex:1;background:#0f1633;color:#9aa8cf" onclick="modeAuth('log')">Login</button>
+  </div>
+  <input id="ph" type="tel" maxlength="10" placeholder="10-digit Mobile Number">
+  <div id="otpRow" style="display:flex;gap:8px">
+    <input id="otpIn" type="tel" maxlength="4" placeholder="Enter OTP" style="margin:0">
+    <button type="button" style="background:#fbbf24;color:#000;white-space:nowrap" onclick="genOtp()">Send OTP</button>
+  </div>
+  <input id="pw" type="password" placeholder="Password" style="margin-top:12px">
+  <button type="button" class="btn-full" onclick="loginGo()">Continue to Game ➔</button>
+</div>
+
+<!-- 2. MAIN APP -->
+<div id="mainDiv" style="display:none">
+  <div style="background:#131b3b;padding:12px 16px;display:flex;justify-content:space-between;align-items:center">
+    <b style="color:#fbbf24;font-size:20px;font-style:italic">StarWinn</b>
+    <button style="background:#23326b;color:#fff;padding:6px 12px" onclick="alert('24/7 Support Connected!')">🎧 Service</button>
+  </div>
+
+  <!-- HOME -->
+  <div id="pgHome">
+    <div class="box" style="text-align:center">
+      <div style="font-size:12px;color:#9aa8cf">Wallet Balance</div>
+      <h2 id="balTxt" style="margin:6px 0 12px;font-size:28px">₹ 1000.00</h2>
+      <div style="display:flex;gap:10px">
+        <button style="flex:1;background:#ea384d;color:#fff;border-radius:20px" onclick="wth()">Withdraw</button>
+        <button style="flex:1;background:#10b981;color:#fff;border-radius:20px" onclick="dep()">Deposit</button>
+      </div>
+    </div>
+
+    <div class="box">
+      <div style="display:flex;justify-content:space-between;align-items:center">
+        <div><b>WinGo 30sec</b><div id="perTxt" style="font-size:12px;color:#9aa8cf;margin-top:4px">20261115100050110</div></div>
+        <div style="background:#0f1633;padding:8px 14px;border-radius:8px;font-size:20px;font-weight:900;color:#fbbf24" id="timTxt">00 : 30</div>
+      </div>
+    </div>
+
+    <div class="box">
+      <div style="display:flex;gap:8px">
+        <button style="flex:1;background:#10b981;color:#fff" onclick="bet('Green')">Green</button>
+        <button style="flex:1;background:#b55fe6;color:#fff" onclick="bet('Violet')">Violet</button>
+        <button style="flex:1;background:#f43f5e;color:#fff" onclick="bet('Red')">Red</button>
+      </div>
+      <div class="grid5">
+        <div class="ball" style="background:#b55fe6" onclick="bet('0')">0</div>
+        <div class="ball" style="background:#10b981" onclick="bet('1')">1</div>
+        <div class="ball" style="background:#f43f5e" onclick="bet('2')">2</div>
+        <div class="ball" style="background:#10b981" onclick="bet('3')">3</div>
+        <div class="ball" style="background:#f43f5e" onclick="bet('4')">4</div>
+        <div class="ball" style="background:#b55fe6" onclick="bet('5')">5</div>
+        <div class="ball" style="background:#f43f5e" onclick="bet('6')">6</div>
+        <div class="ball" style="background:#10b981" onclick="bet('7')">7</div>
+        <div class="ball" style="background:#f43f5e" onclick="bet('8')">8</div>
+        <div class="ball" style="background:#10b981" onclick="bet('9')">9</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button style="flex:1;background:#eab308;color:#fff;border-radius:20px" onclick="bet('Big')">Big</button>
+        <button style="flex:1;background:#3b82f6;color:#fff;border-radius:20px" onclick="bet('Small')">Small</button>
+      </div>
+    </div>
+
+    <div class="box">
+      <b>Game History (10)</b>
+      <table><thead><tr><th>Period</th><th>Num</th><th>Size</th><th>Color</th></tr></thead><tbody id="histTb"></tbody></table>
+    </div>
+  </div>
+
+  <!-- ACCOUNT -->
+  <div id="pgAcc" style="display:none">
+    <div class="box">
+      <h3 id="uTitle">Player (VIP 2)</h3>
+      <p style="font-size:12px;color:#9aa8cf;margin:4px 0 12px">UID: 984521 • Verified ✅</p>
+      <button class="btn-full" style="background:#f59e0b;color:#000;margin-bottom:8px" onclick="gift()">🎁 Redeem Gift Code (STAR100)</button>
+      <button class="btn-full" style="background:#23326b;margin-bottom:8px" onclick="alert(myLogs.join('\n')||'No transactions yet')">📊 Bet & Transaction History</button>
+      <button class="btn-full" style="background:#ea384d" onclick="localStorage.clear();location.reload()">🚪 Log Out</button>
+    </div>
+  </div>
+
+  <div class="nav">
+    <div onclick="tab('h')">🏠<br>Home</div>
+    <div onclick="gift()">🎁<br>Gift</div>
+    <div onclick="dep()">💳<br>Wallet</div>
+    <div onclick="tab('a')">👤<br>Account</div>
+  </div>
+</div>
+
+</div>
+<script>
+var bal=1000,code="",amode="reg",curP="",lastP="",myBets=[],myLogs=["Welcome Bonus: +₹1000"];
+function g(id){return document.getElementById(id)}
+
+if(localStorage.getItem("sw_u")){
+  g("authDiv").style.display="none";
+  g("mainDiv").style.display="block";
+  g("uTitle").innerText="User: +91 "+localStorage.getItem("sw_u")+" (VIP 2)";
+}
+
+function modeAuth(m){
+  amode=m;
+  g("t1").style.background=m=="reg"?"#2b7fff":"#0f1633";
+  g("t2").style.background=m=="log"?"#2b7fff":"#0f1633";
+  g("otpRow").style.display=m=="reg"?"flex":"none";
+}
+
+function genOtp(){
+  var p=g("ph").value;
+  if(p.length<10){alert("Enter 10 digit mobile number!");return}
+  code=String(Math.floor(1000+Math.random()*9000));
+  alert("Your StarWinn OTP is: "+code);
+}
+
+function loginGo(){
+  var p=g("ph").value,w=g("pw").value;
+  if(p.length<10||!w){alert("Enter mobile & password!");return}
+  if(amode=="reg"&&(!code||g("otpIn").value!=code)){alert("Click Send OTP & enter the 4-digit code!");return}
+  localStorage.setItem("sw_u",p);
+  g("authDiv").style.display="none";
+  g("mainDiv").style.display="block";
+  g("uTitle").innerText="User: +91 "+p+" (VIP 2)";
+}
+
+function tab(t){
+  g("pgHome").style.display=t=="h"?"block":"none";
+  g("pgAcc").style.display=t=="a"?"block":"none";
+}
+
+function dep(){
+  var a=prompt("Deposit Amount (₹):","500");
+  if(a>0){bal+=+a;g("balTxt").innerText="₹ "+bal.toFixed(2);myLogs.unshift("Deposit: +₹"+a);alert("₹"+a+" Added!")}
+}
+function wth(){
+  var a=prompt("Withdraw Amount (₹):","500");
+  if(a>0&&a<=bal){bal-=+a;g("balTxt").innerText="₹ "+bal.toFixed(2);myLogs.unshift("Withdraw: -₹"+a);alert("Withdrawal Submitted!")}
+}
+function gift(){
+  var c=prompt("Enter Gift Code (Try: STAR100):","");
+  if(c&&c.toUpperCase()=="STAR100"){bal+=100;g("balTxt").innerText="₹ "+bal.toFixed(2);myLogs.unshift("Gift Bonus: +₹100");alert("₹100 Bonus Added!")}
+  else if(c)alert("Invalid Code!");
+}
+
+function bet(sel){
+  var a=prompt("Bet on "+sel+" — Enter Amount (₹):","10");
+  if(a>0&&a<=bal){
+    bal-=+a;g("balTxt").innerText="₹ "+bal.toFixed(2);
+    myBets.push({p:curP,s:sel,a:+a});
+    myLogs.unshift("Bet "+sel+": -₹"+a);
+    alert("Bet Placed: ₹"+a+" on "+sel);
+  }else if(a>bal)alert("Low Balance!");
+}
+
+function addRow(p,n){
+  var c=n%2==0?"#f43f5e":"#10b981";if(n==0||n==5)c="#b55fe6";
+  var tb=g("histTb");
+  tb.insertAdjacentHTML("afterbegin","<tr><td>"+p+"</td><td style='color:"+c+";font-weight:bold'>"+n+"</td><td>"+(n>=5?"Big":"Small")+"</td><td style='color:"+c+"'>●</td></tr>");
+  if(tb.children.length>10)tb.removeChild(tb.lastChild);
+}
+
+setInterval(function(){
+  var d=new Date(),s=d.getSeconds(),rem=30-(s%30),idx=Math.floor((d.getHours()*3600+d.getMinutes()*60+s)/30);
+  curP="202611151000"+(50000+idx);
+  g("perTxt").innerText=curP;
+  g("timTxt").innerText="00 : "+(rem<10?"0"+rem:rem);
+  if(rem==30&&lastP!=curP){
+    var fp="202611151000"+(50000+idx-1);lastP=curP;
+    var n=Math.floor(Math.random()*10),sz=n>=5?"Big":"Small",col=n%2==0?"Red":"Green";
+    addRow(fp,n);
+    myBets.forEach(function(b){
+      if(b.p==fp){
+        var win=(b.s==String(n))?b.a*9:(b.s==sz||b.s==col)?b.a*2:0;
+        if(win>0){bal+=win;g("balTxt").innerText="₹ "+bal.toFixed(2);myLogs.unshift("Win: +₹"+win);alert("🏆 YOU WON +₹"+win)}
+        else alert("Result: "+n+" ("+col+") - Better luck next time!");
+      }
+    });
+  }
+},1000);
+
+[3,9,2,5,7,1,0,8,6,4].forEach(function(n,i){addRow("2026111510005010"+i,n)});
+</script>
+</body>
+  </html>
