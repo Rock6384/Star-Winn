@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>StarWinn Official</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif}
+body{background:#0b1124;color:#fff;display:flex;justify-content:center}
+.app{width:100%;max-width:440px;min-height:100vh;background:#162044;position:relative;overflow-x:hidden}
+.hide{display:none!important}
+.fab{position:fixed;bottom:85px;right:16px;width:48px;height:48px;border-radius:50%;background:linear-gradient(135deg,#38bdf8,#2563eb);display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 4px 15px rgba(0,0,0,.5);z-index:90;cursor:pointer;border:2px solid #fff}
+.auth{min-height:100vh;background:linear-gradient(180deg,#1a2756 0%,#121b3d 100%);padding:20px}
+.atabs{display:flex;border-bottom:1px solid #2b3c7a;margin:20px 0}
+.atab{flex:1;text-align:center;padding:12px;font-weight:800;color:#8c9bc4;cursor:pointer;border-bottom:3px solid transparent}
+.atab.act{color:#38bdf8;border-bottom-color:#38bdf8}
+.lbl{font-size:13px;color:#cbd5e1;margin:12px 0 6px;display:flex;align-items:center;gap:6px;font-weight:600}
+.inp-box{display:flex;background:#0e1530;border:1px solid #2a3b78;border-radius:10px;align-items:center;padding:0 12px;margin-bottom:8px}
+.inp-box input{flex:1;background:transparent;border:none;color:#fff;padding:13px 8px;font-size:14px;outline:none}
+.btn-p{width:100%;padding:14px;background:linear-gradient(90deg,#2b7fff,#38bdf8);border:none;border-radius:25px;color:#fff;font-size:15px;font-weight:800;margin-top:14px;cursor:pointer}
+.btn-o{width:100%;padding:13px;background:transparent;border:1px solid #38bdf8;border-radius:25px;color:#38bdf8;font-size:15px;font-weight:800;margin-top:12px;cursor:pointer}
+.cap-bg{position:fixed;inset:0;background:rgba(0,0,0,.8);display:flex;align-items:center;justify-content:center;z-index:200;padding:20px}
+.cap-box{background:#1d2a5c;width:100%;max-width:340px;border-radius:14px;padding:16px;border:1px solid #38bdf8;text-align:center}
+.cap-img{height:120px;background:linear-gradient(135deg,#0f172a,#3b82f6,#f43f5e);border-radius:10px;position:relative;margin-bottom:14px;display:flex;align-items:center;justify-content:center;overflow:hidden}
+.cap-slot{width:44px;height:44px;background:rgba(0,0,0,.6);border:2px dashed #fff;border-radius:8px;position:absolute;right:35px}
+.cap-piece{width:44px;height:44px;background:#fbbf24;border:2px solid #fff;border-radius:8px;position:absolute;left:10px;display:flex;align-items:center;justify-content:center;color:#000;font-weight:900}
+input[type=range]{width:100%;accent-color:#10b981;height:36px;cursor:pointer}
+.main{padding-bottom:80px}
+.hdr{background:#121a3b;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:40;border-bottom:1px solid #24336b}
+.logo{font-size:22px;font-weight:900;font-style:italic;color:#fbbf24;cursor:pointer}
+.banner{margin:12px;background:linear-gradient(135deg,#1e3a8a,#2563eb);border-radius:16px;padding:18px;border:1px solid #60a5fa}
+.cat-row{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:12px}
+.cat{background:#202f66;padding:10px 4px;border-radius:12px;text-align:center;font-size:11px;font-weight:700;border:1px solid #314694;cursor:pointer}
+.game-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:12px}
+.g-card{border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;border:1px solid rgba(255,255,255,.2)}
+.g-card h4{font-size:13px;margin-top:8px;font-weight:900}
+.g-card span{font-size:10px;background:rgba(0,0,0,.4);padding:2px 6px;border-radius:8px;display:inline-block;margin-top:4px}
+.w-card{background:#202f66;margin:12px;border-radius:16px;padding:16px;text-align:center;border:1px solid #314694}
+.t-tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:12px}
+.ttab{background:#121a3b;padding:10px 4px;border-radius:12px;text-align:center;font-size:11px;font-weight:700;color:#9aa8cf;cursor:pointer;border:1px solid #263675}
+.ttab.act{background:#2b7fff;color:#fff}
+.td{background:#0f1633;padding:4px 7px;border-radius:4px;font-size:18px;font-weight:900}
+.ball{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:900;cursor:pointer;border:2px solid rgba(255,255,255,.35)}
+.mask{position:absolute;inset:0;background:rgba(12,18,41,.95);border-radius:16px;display:flex;flex-direction:column;justify-content:center;align-items:center;z-index:20}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:8px 4px;border-bottom:1px solid #263675;text-align:left}
+.acc-top{background:linear-gradient(135deg,#25387a,#16224f);padding:20px 16px}
+.acc-bal{background:#131c3d;border-radius:14px;padding:14px;margin-top:14px;border:1px solid #2d4087}
+.acc-icons{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:14px;text-align:center;font-size:11px;font-weight:700}
+.acc-icons div{background:#202f66;padding:10px 4px;border-radius:10px;cursor:pointer}
+.hist-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px}
+.h-box{background:#202f66;padding:14px;border-radius:12px;border:1px solid #314694;display:flex;align-items:center;gap:10px;cursor:pointer}
+.m-list{background:#202f66;margin:12px;border-radius:14px;border:1px solid #314694}
+.m-item{padding:14px 16px;display:flex;justify-content:space-between;border-bottom:1px solid #293b7d;font-size:14px;font-weight:600;cursor:pointer}
+.bnav{position:fixed;bottom:0;width:100%;max-width:440px;background:#101733;display:flex;padding:8px 0;border-top:1px solid #263675;z-index:50}
+.bi{flex:1;text-align:center;font-size:11px;color:#9aa8cf;cursor:pointer}
+.bi.act{color:#38bdf8;font-weight:800}
+.mod{position:fixed;inset:0;background:rgba(0,0,0,.85);display:flex;justify-content:center;align-items:flex-end;z-index:150}
+.mod-box{background:#182247;width:100%;max-width:440px;border-radius:20px 20px 0 0;padding:20px;border-top:2px solid #38bdf8;max-height:90vh;overflow-y:auto}
+.chip{background:#0f1633;border:1px solid #2e4185;padding:10px 4px;border-radius:8px;text-align:center;font-weight:800;font-size:12px;cursor:pointer}
+.chip.act{background:#2b7fff;border-color:#60a5fa}
+.pay-tabs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:10px 0}
+.ptab{background:#0f1633;border:1px solid #2e4185;padding:10px 4px;border-radius:10px;text-align:center;font-size:12px;font-weight:800;cursor:pointer;color:#9aa8cf}
+.ptab.act{background:#2b7fff;color:#fff;border-color:#60a5fa}
+.saved-card{background:#0f1633;border:1px solid #10b981;border-radius:10px;padding:12px;margin:10px 0;font-size:12px}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="fab" onclick="openServ()">🎧</div>
+
+<!-- 1. LOGIN & REGISTER -->
+<div class="auth" id="pgAuth">
+  <div style="display:flex;justify-content:space-between;align-items:center">
+    <span style="font-size:13px;color:#9aa8cf">🇮🇳 EN</span>
+    <span style="font-size:12px;color:#38bdf8;font-weight:700">Official App</span>
+  </div>
+  <div style="text-align:center;margin:18px 0">
+    <div style="font-size:32px;font-weight:900;font-style:italic;color:#fbbf24">StarWinn</div>
+    <p style="font-size:12px;color:#9aa8cf;margin-top:4px">Please log in with your phone number</p>
+  </div>
+  <div class="atabs">
+    <div class="atab act" id="tabL" onclick="setAuth('log')">📱 Phone Login</div>
+    <div class="atab" id="tabR" onclick="setAuth('reg')">📝 Register</div>
+  </div>
+  <div class="lbl">📱 Phone number</div>
+  <div class="inp-box"><span style="color:#9aa8cf;font-weight:700">+91 ▾</span><input type="tel" id="inPh" maxlength="10" placeholder="Please enter the phone number"></div>
+  <div id="otpSec" class="hide">
+    <div class="lbl">📩 Verification Code</div>
+    <div class="inp-box"><input type="tel" id="inOtp" maxlength="4" placeholder="Enter 4-digit OTP"><button type="button" onclick="getOtp()" style="background:#fbbf24;color:#000;border:none;padding:8px 12px;border-radius:8px;font-weight:800;cursor:pointer">Send OTP</button></div>
+  </div>
+  <div class="lbl">🔒 Password</div>
+  <div class="inp-box"><input type="password" id="inPw" placeholder="Please enter password"><span onclick="togglePw()" style="cursor:pointer;font-size:16px">👁️</span></div>
+  <button type="button" class="btn-p" id="btnAuth" onclick="startCaptcha()">Log in</button>
+  <button type="button" class="btn-o" id="btnSubAuth" onclick="setAuth('reg')">Register</button>
+</div>
+
+<!-- CAPTCHA -->
+<div class="cap-bg hide" id="capModal">
+  <div class="cap-box">
+    <div style="display:flex;justify-content:space-between;margin-bottom:10px;font-size:13px;font-weight:700"><span>Security Verification</span><span onclick="g('capModal').classList.add('hide')" style="cursor:pointer">✕</span></div>
+    <div class="cap-img"><div class="cap-slot"></div><div class="cap-piece" id="cPiece">🧩</div></div>
+    <p style="font-size:11px;color:#9aa8cf;margin-bottom:8px">Slide right to complete the puzzle ➔</p>
+    <input type="range" id="cSlider" min="0" max="240" value="0" oninput="movePiece(this.value)" onchange="checkPiece(this.value)">
+  </div>
+</div>
+
+<!-- 2. MAIN APP -->
+<div class="main hide" id="pgMain">
+  <div class="hdr">
+    <div class="logo" onclick="goTab('lobby')">StarWinn</div>
+    <div style="display:flex;gap:8px;align-items:center">
+      <span style="background:#202f66;padding:5px 10px;border-radius:14px;font-size:12px;font-weight:800;color:#fbbf24" id="hdrBal">₹ 1,000.00</span>
+      <span onclick="openServ()" style="font-size:18px;cursor:pointer">📩</span>
+    </div>
+  </div>
+
+  <!-- LOBBY -->
+  <div id="tabLobby">
+    <div class="banner">
+      <div style="font-size:11px;background:#fbbf24;color:#000;display:inline-block;padding:2px 8px;border-radius:8px;font-weight:900">OFFICIAL NOTICE</div>
+      <h3 style="margin:6px 0;font-size:17px">Welcome to StarWinn Gaming</h3>
+      <p style="font-size:11px;color:#dbeafe">Instant Deposit (Up to ₹50,000) & Fast Bank/UPI/USDT Withdrawal</p>
+    </div>
+    <div class="cat-row">
+      <div class="cat" onclick="openWingo()">🏆<br>Popular</div>
+      <div class="cat" onclick="openWingo()">🎱<br>Lottery</div>
+      <div class="cat" onclick="alert('Casino Live loading...')">🎰<br>Casino</div>
+      <div class="cat" onclick="alert('Sportsbook loading...')">🏏<br>Sports</div>
+    </div>
+    <div style="padding:0 14px;font-weight:800;font-size:15px">🔥 Platform Recommendation</div>
+    <div class="game-grid">
+      <div class="g-card" onclick="openWingo()" style="background:linear-gradient(135deg,#059669,#10b981);border:2px solid #fbbf24"><div style="font-size:32px">🎱</div><h4>WINGO</h4><span>RTP 99.2%</span></div>
+      <div class="g-card" onclick="alert('Aviator: Coming Soon! Play WinGo Live now.')" style="background:linear-gradient(135deg,#991b1b,#ef4444)"><div style="font-size:32px">✈️</div><h4>AVIATOR</h4><span>RTP 97.7%</span></div>
+      <div class="g-card" onclick="alert('Mines: Coming Soon! Play WinGo Live now.')" style="background:linear-gradient(135deg,#1e40af,#3b82f6)"><div style="font-size:32px">💣</div><h4>MINES</h4><span>RTP 96.3%</span></div>
+    </div>
+  </div>
+
+  <!-- WINGO -->
+  <div id="tabWingo" class="hide">
+    <div style="padding:10px 14px;display:flex;align-items:center;gap:10px;background:#1c295c"><span onclick="goTab('lobby')" style="cursor:pointer;font-size:18px;font-weight:900">❮ Back</span><b>WinGo Live Lottery</b></div>
+    <div class="w-card">
+      <div style="font-size:12px;color:#9aa8cf">₹ Wallet balance</div>
+      <div style="font-size:28px;font-weight:900;margin:4px 0 12px" id="wBal">₹ 1,000.00</div>
+      <div style="display:flex;gap:10px">
+        <button onclick="openWithdrawModal()" style="flex:1;padding:10px;border:none;border-radius:20px;background:#ea384d;color:#fff;font-weight:800;cursor:pointer">Withdraw</button>
+        <button onclick="openDepositModal()" style="flex:1;padding:10px;border:none;border-radius:20px;background:#10b981;color:#fff;font-weight:800;cursor:pointer">Deposit</button>
+      </div>
+    </div>
+    <div class="t-tabs">
+      <div class="ttab act" id="tm30" onclick="setMode(30)">⏱️<br>WinGo 30s</div>
+      <div class="ttab" id="tm60" onclick="setMode(60)">⏱️<br>WinGo 1m</div>
+      <div class="ttab" id="tm180" onclick="setMode(180)">⏱️<br>WinGo 3m</div>
+      <div class="ttab" id="tm300" onclick="setMode(300)">⏱️<br>WinGo 5m</div>
+    </div>
+    <div class="w-card" style="text-align:left">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+        <div><span onclick="alert('Color/Big-Small=2x | Violet=4.5x | Number=9x')" style="background:rgba(255,255,255,.1);padding:4px 10px;border-radius:12px;font-size:11px;cursor:pointer">📖 How to play</span><div style="font-weight:800;margin-top:6px" id="mLbl">WinGo 30sec</div></div>
+        <div style="text-align:right"><div style="font-size:11px;color:#9aa8cf;margin-bottom:4px">Time remaining</div><div style="display:flex;gap:3px"><div class="td" id="d1">0</div><div class="td" id="d2">0</div><div style="align-self:center;font-weight:900">:</div><div class="td" id="d3">3</div><div class="td" id="d4">0</div></div></div>
+      </div>
+      <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px dashed #3b52a6;padding-top:10px"><div id="rBalls" style="display:flex;gap:4px"></div><div style="font-weight:800;font-size:13px" id="pId">----------------</div></div>
+    </div>
+    <div class="w-card" style="position:relative">
+      <div class="mask hide" id="lockMask"><div style="font-size:75px;font-weight:900;color:#f43f5e" id="lockNum">5</div><div style="color:#fbbf24;font-weight:800;font-size:12px">WAITING FOR RESULT...</div></div>
+      <div style="display:flex;gap:8px;margin-bottom:12px">
+        <button onclick="openBet('Green','#10b981')" style="flex:1;padding:11px;border:none;border-radius:8px;background:#10b981;color:#fff;font-weight:800;cursor:pointer">Green</button>
+        <button onclick="openBet('Violet','#b55fe6')" style="flex:1;padding:11px;border:none;border-radius:8px;background:#b55fe6;color:#fff;font-weight:800;cursor:pointer">Violet</button>
+        <button onclick="openBet('Red','#f43f5e')" style="flex:1;padding:11px;border:none;border-radius:8px;background:#f43f5e;color:#fff;font-weight:800;cursor:pointer">Red</button>
+      </div>
+      <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;justify-items:center;margin-bottom:12px">
+        <div class="ball" onclick="openBet('0','#b55fe6')" style="background:linear-gradient(135deg,#f43f5e 50%,#b55fe6 50%)">0</div>
+        <div class="ball" onclick="openBet('1','#10b981')" style="background:#10b981">1</div>
+        <div class="ball" onclick="openBet('2','#f43f5e')" style="background:#f43f5e">2</div>
+        <div class="ball" onclick="openBet('3','#10b981')" style="background:#10b981">3</div>
+        <div class="ball" onclick="openBet('4','#f43f5e')" style="background:#f43f5e">4</div>
+        <div class="ball" onclick="openBet('5','#b55fe6')" style="background:linear-gradient(135deg,#10b981 50%,#b55fe6 50%)">5</div>
+        <div class="ball" onclick="openBet('6','#f43f5e')" style="background:#f43f5e">6</div>
+        <div class="ball" onclick="openBet('7','#10b981')" style="background:#10b981">7</div>
+        <div class="ball" onclick="openBet('8','#f43f5e')" style="background:#f43f5e">8</div>
+        <div class="ball" onclick="openBet('9','#10b981')" style="background:#10b981">9</div>
+      </div>
+      <div style="display:flex;gap:8px">
+        <button onclick="openBet('Big','#eab308')" style="flex:1;padding:11px;border:none;border-radius:20px;background:#eab308;color:#fff;font-weight:800;cursor:pointer">Big</button>
+        <button onclick="openBet('Small','#3b82f6')" style="flex:1;padding:11px;border:none;border-radius:20px;background:#3b82f6;color:#fff;font-weight:800;cursor:pointer">Small</button>
+      </div>
+    </div>
+    <div class="w-card" style="text-align:left">
+      <div style="display:flex;gap:8px;margin-bottom:10px">
+        <button id="bh1" onclick="swHist(1)" style="flex:1;padding:8px;border:none;border-radius:8px;background:#2b7fff;color:#fff;font-weight:800">Game history (10)</button>
+        <button id="bh2" onclick="swHist(2)" style="flex:1;padding:8px;border:none;border-radius:8px;background:#121a3b;color:#9aa8cf;font-weight:800">My history</button>
+      </div>
+      <div id="hBox1"><table><thead><tr><th>Period</th><th>Number</th><th>Big/Small</th><th>Color</th></tr></thead><tbody id="hRows"></tbody></table></div>
+      <div id="hBox2" class="hide"><table><thead><tr><th>Period</th><th>Select</th><th>Amt</th><th>Status</th></tr></thead><tbody id="myRows"><tr><td colspan="4" style="text-align:center;color:#9aa8cf">No bets yet</td></tr></tbody></table></div>
+    </div>
+  </div>
+  <!-- ACCOUNT -->
+  <div id="tabAcc" class="hide">
+    <div class="acc-top">
+      <div style="display:flex;align-items:center;gap:14px">
+        <div style="width:60px;height:60px;border-radius:50%;background:#fbbf24;display:flex;align-items:center;justify-content:center;font-size:28px;color:#000;border:2px solid #fff">😎</div>
+        <div>
+          <div style="font-size:16px;font-weight:900"><span id="uName">MEMBERSTAR99</span> <span style="background:#fbbf24;color:#000;font-size:10px;padding:2px 8px;border-radius:10px">VIP 4</span></div>
+          <div style="background:rgba(0,0,0,.3);padding:3px 10px;border-radius:10px;font-size:11px;display:inline-block;margin-top:4px">UID | 15450611 📋</div>
+          <div style="font-size:11px;color:#9aa8cf;margin-top:4px">Last login: Active Now</div>
+        </div>
+      </div>
+      <div class="acc-bal">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div><div style="font-size:12px;color:#9aa8cf">Total balance</div><div style="font-size:24px;font-weight:900;margin-top:2px" id="aBal">₹ 1,000.00</div></div>
+          <button onclick="openWingo()" style="background:#2b7fff;color:#fff;border:none;padding:8px 14px;border-radius:16px;font-weight:800;font-size:12px;cursor:pointer">Enter wallet</button>
+        </div>
+        <div class="acc-icons">
+          <div onclick="alert('ARWallet Active!')">💳<br>ARWallet</div>
+          <div onclick="openDepositModal()">📥<br>Deposit</div>
+          <div onclick="openWithdrawModal()">📤<br>Withdraw</div>
+          <div onclick="alert('VIP 4 Level: Daily Rebate 0.8%')">👑<br>VIP</div>
+        </div>
+      </div>
+    </div>
+    <div class="hist-grid">
+      <div class="h-box" onclick="openRec('bets')"><span style="font-size:24px">🎲</span><div><b style="font-size:13px">Game History</b><div style="font-size:10px;color:#9aa8cf">My game history</div></div></div>
+      <div class="h-box" onclick="openRec('trans')"><span style="font-size:24px">📊</span><div><b style="font-size:13px">Transaction</b><div style="font-size:10px;color:#9aa8cf">My transaction history</div></div></div>
+      <div class="h-box" onclick="openRec('dep')"><span style="font-size:24px">💰</span><div><b style="font-size:13px">Deposit</b><div style="font-size:10px;color:#9aa8cf">My deposit history</div></div></div>
+      <div class="h-box" onclick="openRec('with')"><span style="font-size:24px">🏦</span><div><b style="font-size:13px">Withdraw</b><div style="font-size:10px;color:#9aa8cf">My withdraw history</div></div></div>
+    </div>
+    <div class="m-list">
+      <div class="m-item" onclick="claimGift()"><span>🎁 Gift Code Redeem</span><span style="color:#fbbf24">Claim ➔</span></div>
+      <div class="m-item" onclick="openServ()"><span>🎧 24/7 Customer Service</span><span style="color:#10b981">Online ➔</span></div>
+      <div class="m-item" onclick="doLogout()" style="color:#f43f5e;border:none"><span>🚪 Log Out</span><span>➔</span></div>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAV -->
+  <div class="bnav">
+    <div class="bi act" id="navL" onclick="goTab('lobby')">🏠<br>Home</div>
+    <div class="bi" onclick="claimGift()">🎁<br>Activity</div>
+    <div class="bi" id="navW" onclick="openWingo()">🎱<br>WinGo</div>
+    <div class="bi" onclick="openDepositModal()">💳<br>Wallet</div>
+    <div class="bi" id="navA" onclick="goTab('acc')">👤<br>Account</div>
+  </div>
+</div>
+
+<!-- DEPOSIT POPUP (MAX ₹50,000) -->
+<div class="mod hide" id="depPop">
+  <div class="mod-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+      <b>📥 Deposit Balance (Max ₹50,000)</b>
+      <span onclick="g('depPop').classList.add('hide')" style="cursor:pointer;font-size:18px">✕</span>
+    </div>
+    <div class="pay-tabs">
+      <div class="ptab act" id="dp1" onclick="setDepCh(1)">📱 UPI QR</div>
+      <div class="ptab" id="dp2" onclick="setDepCh(2)">⚡ Fast UPI</div>
+      <div class="ptab" id="dp3" onclick="setDepCh(3)">💎 USDT</div>
+    </div>
+    <div style="background:#0f1633;padding:10px;border-radius:10px;font-size:12px;margin:8px 0;border:1px dashed #38bdf8" id="depInfoBox">
+      UPI ID: <b style="color:#fbbf24">starwinn.pay@upi</b> (Auto Credit)
+    </div>
+    <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:8px 0">
+      <div class="chip act" onclick="setDepAmt(100)">₹ 100</div>
+      <div class="chip" onclick="setDepAmt(500)">₹ 500</div>
+      <div class="chip" onclick="setDepAmt(1000)">₹ 1,000</div>
+      <div class="chip" onclick="setDepAmt(5000)">₹ 5,000</div>
+      <div class="chip" onclick="setDepAmt(10000)">₹ 10,000</div>
+      <div class="chip" onclick="setDepAmt(50000)">₹ 50,000</div>
+    </div>
+    <div class="inp-box"><span style="color:#fbbf24;font-weight:900">₹</span><input type="number" id="inDepAmt" value="100" min="100" max="50000" placeholder="Enter amount (Max 50000)"></div>
+    <div class="inp-box"><input type="text" id="inDepUtr" maxlength="12" placeholder="Enter 12-digit UTR / Ref No"></div>
+    <button type="button" class="btn-p" onclick="submitDeposit()">Deposit Now ➔</button>
+  </div>
+</div>
+
+<!-- WITHDRAW POPUP (BANK / UPI / USDT) -->
+<div class="mod hide" id="withPop">
+  <div class="mod-box">
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+      <b>📤 Withdraw Balance</b>
+      <span onclick="g('withPop').classList.add('hide')" style="cursor:pointer;font-size:18px">✕</span>
+    </div>
+    <div style="font-size:12px;color:#9aa8cf">Available: <b style="color:#10b981" id="wAvail">₹ 1,000.00</b></div>
+    <div class="pay-tabs">
+      <div class="ptab act" id="wtBank" onclick="setWithTab('bank')">🏦 Bank Card</div>
+      <div class="ptab" id="wtUpi" onclick="setWithTab('upi')">📱 Add UPI</div>
+      <div class="ptab" id="wtUsdt" onclick="setWithTab('usdt')">💎 Add USDT</div>
+    </div>
+    <div id="savedMethodBox" class="saved-card hide"></div>
+    <div id="formBank">
+      <div class="inp-box"><input type="text" id="bHolder" placeholder="Account Holder Name"></div>
+      <div class="inp-box"><input type="text" id="bName" placeholder="Bank Name (e.g. SBI, HDFC)"></div>
+      <div class="inp-box"><input type="tel" id="bAcc" placeholder="Bank Account Number"></div>
+      <div class="inp-box"><input type="text" id="bIfsc" placeholder="IFSC Code (e.g. SBIN0001234)"></div>
+      <button type="button" onclick="saveMethod('bank')" style="width:100%;padding:10px;background:#10b981;border:none;border-radius:10px;color:#fff;font-weight:800;margin-bottom:10px;cursor:pointer">+ Save Bank Account</button>
+    </div>
+    <div id="formUpi" class="hide">
+      <div class="inp-box"><input type="text" id="uId" placeholder="Enter UPI ID (e.g. 9876543210@ybl)"></div>
+      <button type="button" onclick="saveMethod('upi')" style="width:100%;padding:10px;background:#10b981;border:none;border-radius:10px;color:#fff;font-weight:800;margin-bottom:10px;cursor:pointer">+ Save UPI ID</button>
+    </div>
+    <div id="formUsdt" class="hide">
+      <div class="inp-box"><input type="text" id="usdtAddr" placeholder="Enter USDT TRC20 Wallet Address"></div>
+      <button type="button" onclick="saveMethod('usdt')" style="width:100%;padding:10px;background:#10b981;border:none;border-radius:10px;color:#fff;font-weight:800;margin-bottom:10px;cursor:pointer">+ Save USDT Address</button>
+    </div>
+    <div class="inp-box"><span style="color:#ea384d;font-weight:900">₹</span><input type="number" id="inWithAmt" placeholder="Enter Withdrawal Amount (Min ₹110)"></div>
+    <button type="button" class="btn-p" style="background:linear-gradient(90deg,#ea384d,#f43f5e)" onclick="submitWithdraw()">Confirm Withdraw</button>
+  </div>
+</div>
+<div class="mod hide" id="scamPop"><div class="mod-box" style="text-align:center;border-radius:18px;margin:auto"><div style="background:#2b7fff;padding:10px;border-radius:10px;font-weight:900;margin-bottom:12px">🛡️ SECURITY NOTICE</div><p style="font-size:12px;color:#cbd5e1;margin-bottom:16px">StarWinn will never ask for your OTP or password. Always play on official StarWinn portal.</p><button onclick="g('scamPop').classList.add('hide')" class="btn-p" style="margin:0">Confirm</button></div></div>
+
+<div class="mod hide" id="betPop"><div class="mod-box">
+  <div id="betTitle" style="padding:12px;border-radius:10px;text-align:center;font-weight:900;margin-bottom:12px">Select</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0">
+    <div class="chip act" id="ch10" onclick="pickAmt(10)">₹10</div><div class="chip" id="ch50" onclick="pickAmt(50)">₹50</div><div class="chip" id="ch100" onclick="pickAmt(100)">₹100</div><div class="chip" id="ch500" onclick="pickAmt(500)">₹500</div>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:14px">
+    <button onclick="g('betPop').classList.add('hide')" style="flex:1;padding:12px;border:none;border-radius:10px;background:#334155;color:#fff;font-weight:800">Cancel</button>
+    <button id="btnCnfBet" onclick="placeBet()" style="flex:2;padding:12px;border:none;border-radius:10px;background:#2b7fff;color:#fff;font-weight:800">Confirm ₹10</button>
+  </div>
+</div></div>
+
+<div class="mod hide" id="recPop"><div class="mod-box">
+  <div style="display:flex;justify-content:space-between;margin-bottom:12px"><b id="recTit">Records</b><span onclick="g('recPop').classList.add('hide')" style="cursor:pointer">✕</span></div>
+  <div id="recList" style="max-height:260px;overflow-y:auto;font-size:12px"></div>
+</div></div>
+
+</div>
+
+<script>
+var bal=1000,mode=30,curP="",lastP="",sel="",amt=10,otpCode="",aType="log",wMethod="bank";
+var bets=[],deps=[{d:"Today",a:1000,m:"UPI"}],withs=[],trns=[{t:"Welcome Bonus",a:"+₹1000.00",c:"#10b981"}];
+var savedAcc={bank:localStorage.getItem("sw_bank")||"",upi:localStorage.getItem("sw_upi")||"",usdt:localStorage.getItem("sw_usdt")||""};
+function g(id){return document.getElementById(id)}
+
+if(localStorage.getItem("sw_user"))enterApp(localStorage.getItem("sw_user"),false);
+
+function setAuth(t){aType=t;g("tabL").className=t=="log"?"atab act":"atab";g("tabR").className=t=="reg"?"atab act":"atab";g("otpSec").className=t=="reg"?"":"hide";g("btnAuth").innerText=t=="log"?"Log in":"Register";g("btnSubAuth").innerText=t=="log"?"Register":"Back to Login";g("btnSubAuth").onclick=function(){setAuth(t=="log"?"reg":"log")}}
+function togglePw(){var p=g("inPw");p.type=p.type=="password"?"text":"password"}
+function getOtp(){var ph=g("inPh").value.trim();if(ph.length<10){alert("Enter 10-digit mobile number!");return}otpCode=String(Math.floor(1000+Math.random()*9000));alert("📩 StarWinn OTP: "+otpCode)}
+function startCaptcha(){var ph=g("inPh").value.trim(),pw=g("inPw").value.trim();if(ph.length<10||!pw){alert("Enter phone number and password!");return}if(aType=="reg"&&(!otpCode||g("inOtp").value.trim()!=otpCode)){alert("Click Send OTP & enter 4-digit code!");return}g("cSlider").value=0;g("cPiece").style.left="10px";g("capModal").classList.remove("hide")}
+function movePiece(v){g("cPiece").style.left=(10+Number(v))+"px"}
+function checkPiece(v){if(Number(v)>=195){g("capModal").classList.add("hide");var ph=g("inPh").value.trim();localStorage.setItem("sw_user",ph);enterApp(ph,true)}else{g("cSlider").value=0;g("cPiece").style.left="10px"}}
+function enterApp(ph,sn){g("pgAuth").classList.add("hide");g("pgMain").classList.remove("hide");g("uName").innerText="MEMBER"+ph.slice(-5);if(sn)g("scamPop").classList.remove("hide")}
+function doLogout(){localStorage.removeItem("sw_user");location.reload()}
+
+function goTab(t){g("tabLobby").className=t=="lobby"?"":"hide";g("tabWingo").className=t=="wingo"?"":"hide";g("tabAcc").className=t=="acc"?"":"hide";g("navL").className=t=="lobby"?"bi act":"bi";g("navW").className=t=="wingo"?"bi act":"bi";g("navA").className=t=="acc"?"bi act":"bi";window.scrollTo(0,0)}
+function openWingo(){goTab("wingo")}
+function openServ(){alert("🎧 StarWinn 24/7 Customer Support:\n• Live Chat Support Active\n• Deposit/Withdrawal Help")}
+function upBal(){var txt="₹ "+bal.toFixed(2);g("hdrBal").innerText=txt;g("wBal").innerText=txt;g("aBal").innerText=txt;g("wAvail").innerText=txt}
+
+function openDepositModal(){g("inDepAmt").value=100;g("depPop").classList.remove("hide")}
+function setDepCh(n){
+  [1,2,3].forEach(function(i){g("dp"+i).className="ptab"});g("dp"+n).className="ptab act";
+  g("depInfoBox").innerHTML=n==1?"UPI QR ID: <b style='color:#fbbf24'>starwinn.pay@upi</b> (Instant)":n==2?"Fast IMPS UPI: <b style='color:#10b981'>pay.starwinn@ybl</b>":"USDT TRC20: <b style='color:#38bdf8'>TStarWinnTRC20Wallet99X</b> (1 USDT = ₹90)";
+}
+function setDepAmt(v){g("inDepAmt").value=v}
+function submitDeposit(){
+  var a=Number(g("inDepAmt").value);
+  if(!a||a<100){alert("Minimum deposit is ₹100");return}
+  if(a>50000){alert("Maximum deposit limit is ₹50,000 per transaction!");return}
+  bal+=a;deps.unshift({d:"Just now",a:a,m:"Online"});trns.unshift({t:"Deposit",a:"+₹"+a.toFixed(2),c:"#10b981"});
+  upBal();g("depPop").classList.add("hide");alert("✅ ₹"+a+" Deposited Successfully!");
+}
+
+function openWithdrawModal(){upBal();setWithTab("bank");g("withPop").classList.remove("hide")}
+function setWithTab(m){
+  wMethod=m;g("wtBank").className=m=="bank"?"ptab act":"ptab";g("wtUpi").className=m=="upi"?"ptab act":"ptab";g("wtUsdt").className=m=="usdt"?"ptab act":"ptab";
+  g("formBank").className=m=="bank"?"":"hide";g("formUpi").className=m=="upi"?"":"hide";g("formUsdt").className=m=="usdt"?"":"hide";showSavedBox();
+}
+function showSavedBox(){
+  var box=g("savedMethodBox");
+  if(savedAcc[wMethod]){box.innerHTML="✅ Saved "+wMethod.toUpperCase()+": <b>"+savedAcc[wMethod]+"</b>";box.classList.remove("hide")}
+  else box.classList.add("hide");
+}
+function saveMethod(m){
+  if(m=="bank"){
+    var h=g("bHolder").value.trim(),bn=g("bName").value.trim(),ac=g("bAcc").value.trim(),ifs=g("bIfsc").value.trim();
+    if(!h||!bn||!ac||!ifs){alert("Fill all Bank details!");return}
+    savedAcc.bank=bn+" - "+ac+" ("+ifs+")";localStorage.setItem("sw_bank",savedAcc.bank);
+  }else if(m=="upi"){
+    var u=g("uId").value.trim();
+    if(!u||u.indexOf("@")==-1){alert("Enter valid UPI ID (e.g. name@upi)");return}
+    savedAcc.upi=u;localStorage.setItem("sw_upi",u);
+  }else{
+    var us=g("usdtAddr").value.trim();
+    if(us.length<10){alert("Enter valid USDT TRC20 address!");return}
+    savedAcc.usdt=us;localStorage.setItem("sw_usdt",us);
+  }
+  showSavedBox();alert("✅ "+m.toUpperCase()+" Account Saved Successfully!");
+}
+function submitWithdraw(){
+  if(!savedAcc[wMethod]){alert("Please add & save your "+wMethod.toUpperCase()+" details first!");return}
+  var a=Number(g("inWithAmt").value);
+  if(!a||a<110){alert("Minimum withdrawal is ₹110");return}
+  if(a>bal){alert("Insufficient Wallet Balance!");return}
+  bal-=a;withs.unshift({d:"Just now",a:a,m:wMethod.toUpperCase()});trns.unshift({t:"Withdraw ("+wMethod.toUpperCase()+")",a:"-₹"+a.toFixed(2),c:"#f43f5e"});
+  upBal();g("withPop").classList.add("hide");alert("🏦 Withdrawal of ₹"+a+" submitted to "+savedAcc[wMethod]);
+}
+
+function claimGift(){var c=prompt("Enter Gift Code (Try: STAR100):","");if(c&&c.toUpperCase()=="STAR100"){bal+=100;trns.unshift({t:"Gift Bonus",a:"+₹100",c:"#fbbf24"});upBal();alert("🎁 ₹100 Bonus Added!")}else if(c)alert("Invalid Code! Use STAR100")}
+
+function openRec(r){
+  var h="";g("recTit").innerText=r.toUpperCase()+" HISTORY";
+  if(r=="bets")h=bets.length?bets.map(function(x){return"<div style='padding:8px;border-bottom:1px solid #2b3b75'>"+x.t+" • ₹"+x.a+" • <b>"+x.s+"</b></div>"}).join(""):"No bets placed yet.";
+  else if(r=="dep")h=deps.map(function(x){return"<div style='padding:8px;border-bottom:1px solid #2b3b75'>₹"+x.a+" ("+x.d+") • <span style='color:#10b981'>Success</span></div>"}).join("");
+  else if(r=="with")h=withs.length?withs.map(function(x){return"<div style='padding:8px;border-bottom:1px solid #2b3b75'>₹"+x.a+" via "+x.m+" ("+x.d+") • <span style='color:#fbbf24'>Processing</span></div>"}).join(""):"No withdrawals yet.";
+  else h=trns.map(function(x){return"<div style='padding:8px;border-bottom:1px solid #2b3b75;color:"+x.c+"'>"+x.t+": "+x.a+"</div>"}).join("");
+  g("recList").innerHTML=h;g("recPop").classList.remove("hide");
+}
+
+function setMode(s){mode=s;[30,60,180,300].forEach(function(x){g("tm"+x).className="ttab"});g("tm"+s).className="ttab act";g("mLbl").innerText="WinGo "+(s==30?"30sec":(s/60)+" Min");tick()}
+function openBet(v,c){sel=v;amt=10;g("betTitle").innerText="WinGo • Select: "+v;g("betTitle").style.background=c;pickAmt(10);g("betPop").classList.remove("hide")}
+function pickAmt(a){amt=a;[10,50,100,500].forEach(function(x){g("ch"+x).className="chip"});g("ch"+a).className="chip act";g("btnCnfBet").innerText="Confirm ₹"+a}
+function placeBet(){if(amt>bal){alert("Low Balance!");return}bal-=amt;trns.unshift({t:"Bet "+sel,a:"-₹"+amt,c:"#f43f5e"});upBal();bets.unshift({p:curP,t:sel,a:amt,s:"Pending"});renderMy();g("betPop").classList.add("hide")}
+function renderMy(){var tb=g("myRows");tb.innerHTML="";bets.slice(0,10).forEach(function(b){tb.innerHTML+="<tr><td>"+b.p.slice(-5)+"</td><td><b>"+b.t+"</b></td><td>₹"+b.a+"</td><td>"+b.s+"</td></tr>"})}
+function swHist(n){g("bh1").style.background=n==1?"#2b7fff":"#121a3b";g("bh1").style.color=n==1?"#fff":"#9aa8cf";g("bh2").style.background=n==2?"#2b7fff":"#121a3b";g("bh2").style.color=n==2?"#fff":"#9aa8cf";g("hBox1").className=n==1?"":"hide";g("hBox2").className=n==2?"":"hide"}
+
+function addHist(p,n){
+  var c=n%2==0?"#f43f5e":"#10b981";if(n==0||n==5)c="#b55fe6";
+  var tb=g("hRows");
+  tb.insertAdjacentHTML("afterbegin","<tr><td>"+p+"</td><td style='color:"+c+";font-weight:900'>"+n+"</td><td>"+(n>=5?"Big":"Small")+"</td><td style='color:"+c+"'>●</td></tr>");
+  if(tb.children.length>10)tb.removeChild(tb.lastChild);
+  var rb=g("rBalls");rb.innerHTML="";
+  for(var i=0;i<Math.min(5,tb.children.
