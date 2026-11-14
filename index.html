@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>StarWinn - WinGo</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif}
+body{background:#0f162e;color:#fff;display:flex;justify-content:center}
+.app{width:100%;max-width:440px;min-height:100vh;background:#1c2752;padding-bottom:75px}
+.nav{background:#182247;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #2b3b75}
+.logo{font-size:22px;font-weight:900;font-style:italic;color:#fbbf24}
+.icons{display:flex;gap:10px}
+.ibtn{background:#26356e;border:none;color:#fff;width:34px;height:34px;border-radius:50%;font-size:16px;cursor:pointer}
+.ustrip{background:#152047;padding:8px 16px;display:flex;justify-content:space-between;align-items:center;font-size:12px}
+.abtn{background:#3b82f6;border:none;padding:4px 12px;border-radius:12px;color:#fff;font-weight:700;cursor:pointer}
+.wcard{background:#223168;margin:12px;border-radius:16px;padding:16px;text-align:center;border:1px solid #2e4185}
+.bal{font-size:28px;font-weight:900;margin:6px 0 12px}
+.wbtns{display:flex;gap:10px}
+.bw{flex:1;padding:10px;border:none;border-radius:25px;font-weight:800;color:#fff;cursor:pointer}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:12px}
+.tab{background:#192348;border-radius:12px;padding:10px 4px;text-align:center;font-size:11px;font-weight:700;border:1px solid #2a3c7a;cursor:pointer}
+.tab.active{background:#2b7fff;border-color:#60a5fa}
+.tbox{background:#223168;margin:12px;border-radius:16px;padding:14px;border:1px solid #2e4185}
+.ttop{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.tdigits{display:flex;gap:3px}
+.td{background:#131c3a;padding:4px 7px;border-radius:4px;font-size:18px;font-weight:900}
+.tbtm{display:flex;justify-content:space-between;align-items:center;border-top:1px dashed #3b509c;padding-top:10px}
+.rballs{display:flex;gap:4px}
+.mball{width:22px;height:22px;border-radius:50%;font-size:11px;font-weight:900;display:flex;align-items:center;justify-content:center}
+.betbox{background:#223168;margin:12px;border-radius:16px;padding:14px;border:1px solid #2e4185;position:relative}
+.cgrp{display:flex;gap:8px;margin-bottom:12px}
+.cbtn{flex:1;padding:11px;border:none;border-radius:8px;font-weight:800;color:#fff;cursor:pointer}
+.bgrid{display:grid;grid-template-columns:repeat(5,1fr);gap:10px 6px;justify-items:center;margin-bottom:12px}
+.ball{width:48px;height:48px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:19px;font-weight:900;cursor:pointer;border:2px solid rgba(255,255,255,.3)}
+.sgrp{display:flex;gap:8px}
+.sbtn{flex:1;padding:12px;border:none;border-radius:25px;font-weight:800;color:#fff;cursor:pointer}
+.mask{position:absolute;inset:0;background:rgba(15,22,46,.95);border-radius:16px;display:none;flex-direction:column;justify-content:center;align-items:center;z-index:20}
+.mnum{font-size:80px;font-weight:900;color:#f43f5e}
+.hcard{background:#223168;margin:12px;border-radius:16px;padding:14px;border:1px solid #2e4185}
+.htabs{display:flex;gap:8px;margin-bottom:10px}
+.htab{flex:1;text-align:center;padding:6px;font-size:13px;font-weight:700;border-radius:6px;cursor:pointer;color:#9aa8cf}
+.htab.active{background:#2b7fff;color:#fff}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:8px 4px;text-align:left;border-bottom:1px solid #2a3c7a}
+.dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+.bnav{position:fixed;bottom:0;width:100%;max-width:440px;background:#131b38;display:flex;padding:8px 0;border-top:1px solid #233166;z-index:50}
+.bi{flex:1;text-align:center;font-size:10px;color:#9aa8cf;cursor:pointer}
+.bi.active{color:#38bdf8;font-weight:700}
+.modal{position:fixed;inset:0;background:rgba(0,0,0,.8);display:none;justify-content:center;align-items:flex-end;z-index:100}
+.sheet{background:#182247;width:100%;max-width:440px;border-radius:20px 20px 0 0;padding:20px;border-top:2px solid #38bdf8}
+.inp{width:100%;padding:12px;background:#101833;border:1px solid #2e4185;border-radius:8px;color:#fff;margin-bottom:10px}
+.sub{width:100%;padding:12px;background:#2b7fff;border:none;border-radius:8px;color:#fff;font-weight:800;cursor:pointer}
+.agrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0}
+.chip{background:#101833;border:1px solid #2e4185;padding:10px;border-radius:8px;text-align:center;font-weight:700;cursor:pointer}
+.chip.active{background:#2b7fff}
+.winpop{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);width:290px;background:#182247;border:2px solid #fbbf24;border-radius:18px;padding:22px;text-align:center;z-index:200;display:none}
+</style>
+</head>
+<body>
+<div class="app">
+  <div class="nav">
+    <div class="logo">StarWinn</div>
+    <div class="icons">
+      <button class="ibtn" onclick="openM('servM')">🎧</button>
+      <button class="ibtn" onclick="openM('authM')">👤</button>
+    </div>
+  </div>
+  <div class="ustrip">
+    <div>User: <b id="uname" style="color:#fbbf24">Star Player</b> (UID: 984521)</div>
+    <button class="abtn" id="abtn" onclick="openM('authM')">Login / Sign Up</button>
+  </div>
+  <div class="wcard">
+    <div style="font-size:12px;color:#9aa8cf">₹ Wallet balance</div>
+    <div class="bal" id="bal">₹ 1,000.00</div>
+    <div class="wbtns">
+      <button class="bw" style="background:#ea384d" onclick="withd()">Withdraw</button>
+      <button class="bw" style="background:#10b981" onclick="depo()">Deposit</button>
+    </div>
+  </div>
+  <div class="tabs">
+    <div class="tab active" id="m30" onclick="setMode(30)">⏱️<br>WinGo 30s</div>
+    <div class="tab" id="m60" onclick="setMode(60)">⏱️<br>WinGo 1m</div>
+    <div class="tab" id="m180" onclick="setMode(180)">⏱️<br>WinGo 3m</div>
+    <div class="tab" id="m300" onclick="setMode(300)">⏱️<br>WinGo 5m</div>
+  </div>
+  <div class="tbox">
+    <div class="ttop">
+      <div>
+        <span style="background:rgba(255,255,255,.1);padding:4px 10px;border-radius:12px;font-size:11px" onclick="alert('Color/Big-Small = 2x | Number = 9x')">📖 Rules</span>
+        <div style="font-weight:800;margin-top:6px" id="mlbl">WinGo 30sec</div>
+      </div>
+      <div style="text-align:right">
+        <div style="font-size:11px;color:#9aa8cf;margin-bottom:4px">Time remaining</div>
+        <div class="tdigits">
+          <div class="td" id="m1">0</div><div class="td" id="m2">0</div>
+          <div style="align-self:center;font-weight:900">:</div>
+          <div class="td" id="s1">3</div><div class="td" id="s2">0</div>
+        </div>
+      </div>
+    </div>
+    <div class="tbtm">
+      <div class="rballs" id="rballs"></div>
+      <div style="font-weight:800;font-size:13px" id="pid">----------------</div>
+    </div>
+  </div>
+  <div class="betbox">
+    <div class="mask" id="mask"><div class="mnum" id="mval">5</div><div style="color:#fbbf24;font-weight:800;font-size:12px">WAITING FOR DRAW...</div></div>
+    <div class="cgrp">
+      <button class="cbtn" style="background:#10b981" onclick="betSlip('Green','#10b981')">Green</button>
+      <button class="cbtn" style="background:#b55fe6" onclick="betSlip('Violet','#b55fe6')">Violet</button>
+      <button class="cbtn" style="background:#f43f5e" onclick="betSlip('Red','#f43f5e')">Red</button>
+    </div>
+    <div class="bgrid">
+      <div class="ball" style="background:linear-gradient(135deg,#f43f5e 50%,#b55fe6 50%)" onclick="betSlip('0','#b55fe6')">0</div>
+      <div class="ball" style="background:#10b981" onclick="betSlip('1','#10b981')">1</div>
+      <div class="ball" style="background:#f43f5e" onclick="betSlip('2','#f43f5e')">2</div>
+      <div class="ball" style="background:#10b981" onclick="betSlip('3','#10b981')">3</div>
+      <div class="ball" style="background:#f43f5e" onclick="betSlip('4','#f43f5e')">4</div>
+      <div class="ball" style="background:linear-gradient(135deg,#10b981 50%,#b55fe6 50%)" onclick="betSlip('5','#b55fe6')">5</div>
+      <div class="ball" style="background:#f43f5e" onclick="betSlip('6','#f43f5e')">6</div>
+      <div class="ball" style="background:#10b981" onclick="betSlip('7','#10b981')">7</div>
+      <div class="ball" style="background:#f43f5e" onclick="betSlip('8','#f43f5e')">8</div>
+      <div class="ball" style="background:#10b981" onclick="betSlip('9','#10b981')">9</div>
+    </div>
+    <div class="sgrp">
+      <button class="sbtn" style="background:#eab308" onclick="betSlip('Big','#eab308')">Big</button>
+      <button class="sbtn" style="background:#3b82f6" onclick="betSlip('Small','#3b82f6')">Small</button>
+    </div>
+  </div>
+  <div class="hcard">
+    <div class="htabs">
+      <div class="htab active" id="th1" onclick="swH(1)">Game history</div>
+      <div class="htab" id="th2" onclick="swH(2)">My history</div>
+    </div>
+    <div id="hb1">
+      <table><thead><tr><th>Period</th><th>Num</th><th>Size</th><th>Color</th></tr></thead><tbody id="hrows"></tbody></table>
+    </div>
+    <div id="hb2" style="display:none">
+      <table><thead><tr><th>Period</th><th>Select</th><th>Bet</th><th>Status</th></tr></thead><tbody id="myrows"><tr><td colspan="4" style="text-align:center;color:#9aa8cf">No bets yet</td></tr></tbody></table>
+    </div>
+  </div>
+  <div class="bnav">
+    <div class="bi active">🏠<br>Home</div>
+    <div class="bi" onclick="openM('servM')">🎁<br>Activity</div>
+    <div class="bi" onclick="depo()">💳<br>Wallet</div>
+    <div class="bi" onclick="openM('authM')">👤<br>Account</div>
+  </div>
+</div>
+
+<!-- Bet Modal -->
+<div class="modal" id="betM">
+  <div class="sheet">
+    <div id="bban" style="padding:12px;border-radius:8px;text-align:center;font-weight:800;margin-bottom:10px">Select</div>
+    <div style="font-size:12px;color:#9aa8cf">Amount (₹)</div>
+    <div class="agrid">
+      <div class="chip active" onclick="setA(10,this)">₹10</div>
+      <div class="chip" onclick="setA(50,this)">₹50</div>
+      <div class="chip" onclick="setA(100,this)">₹100</div>
+      <div class="chip" onclick="setA(500,this)">₹500</div>
+    </div>
+    <div style="display:flex;gap:10px;margin-top:12px">
+      <button class="sub" style="background:#334155;flex:1" onclick="closeM('betM')">Cancel</button>
+      <button class="sub" style="flex:2" id="cbtn" onclick="doBet()">Confirm ₹10</button>
+    </div>
+  </div>
+</div>
+
+<!-- Auth Modal -->
+<div class="modal" id="authM">
+  <div class="sheet">
+    <div style="display:flex;justify-content:space-between;margin-bottom:14px"><b>StarWinn Account</b><span onclick="closeM('authM')" style="cursor:pointer">✕</span></div>
+    <input class="inp" id="ph" maxlength="10" placeholder="Mobile Number (+91)">
+    <input class="inp" type="password" id="pw" placeholder="Password">
+    <button class="sub" onclick="doAuth()">Login / Register</button>
+  </div>
+</div>
+
+<!-- Service Modal -->
+<div class="modal" id="servM">
+  <div class="sheet">
+    <div style="display:flex;justify-content:space-between;margin-bottom:14px"><b>🎧 24x7 StarWinn Self-Service</b><span onclick="closeM('servM')" style="cursor:pointer">✕</span></div>
+    <button class="sub" style="margin-bottom:8px;background:#223168" onclick="alert('Connecting to Live Chat...')">💬 Live Customer Chat</button>
+    <button class="sub" style="margin-bottom:8px;background:#223168" onclick="alert('UTR Verification Started')">💰 Deposit Issue Check</button>
+    <button class="sub" style="background:#223168" onclick="alert('OTP sent for password reset')">🔑 Reset Password</button>
+  </div>
+</div>
+
+<!-- Win Popup -->
+<div class="winpop" id="wpop">
+  <div style="font-size:40px" id="wico">🏆</div>
+  <div style="font-size:20px;font-weight:900;margin:6px 0" id="wtit">CONGRATULATIONS!</div>
+  <div style="font-size:12px;color:#9aa8cf" id="wdet"></div>
+  <div style="font-size:24px;font-weight:900;color:#fbbf24;margin:10px 0" id="wamt"></div>
+  <button class="sub" onclick="document.getElementById('wpop').style.display='none'">OK</button>
+</div>
+
+<script>
+let bal=1000,mode=30,curP="",lastP="",sel="",amt=10,bets=[],user=null;
+function uBal(){document.getElementById('bal').innerText="₹ "+bal.toFixed(2)}
+function openM(id){document.getElementById(id).style.display='flex'}
+function closeM(id){document.getElementById(id).style.display='none'}
+function depo(){let a=prompt("Deposit Amount:","500");if(a>0){bal+=+a;uBal();alert("₹"+a+" Added!")}}
+function withd(){if(!user){alert("Login first!");openM('authM');return}let a=prompt("Withdraw Amount:","500");if(a>0&&a<=bal){bal-=+a;uBal();alert("Withdrawal Submitted!")}}
+function doAuth(){let p=document.getElementById('ph').value;if(p.length<10){alert("Enter 10 digit number");return}user=p;document.getElementById('uname').innerText="+91 "+p.slice(0,5)+"*****";document.getElementById('abtn').innerText="Active";closeM('authM')}
+function setMode(s){mode=s;document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('m'+s).classList.add('active');document.getElementById('mlbl').innerText=s==30?"WinGo 30sec":s==60?"WinGo 1 Min":s==180?"WinGo 3 Min":"WinGo 5 Min";tick()}
+function betSlip(t,c){sel=t;amt=10;document.getElementById('bban').innerText="StarWinn • "+t;document.getElementById('bban').style.background=c;document.getElementById('cbtn').innerText="Confirm ₹10";openM('betM')}
+function setA(a,el){amt=a;document.querySelectorAll('.chip').forEach(c=>c.classList.remove('active'));el.classList.add('active');document.getElementById('cbtn').innerText="Confirm ₹"+a}
+function doBet(){if(amt>bal){alert("Low Balance!");return}bal-=amt;uBal();bets.push({p:curP,t:sel,a:amt,st:"Pending"});rBets();closeM('betM')}
+function rBets(){let tb=document.getElementById('myrows');tb.innerHTML="";[...bets].reverse().forEach(b=>{let c=b.st.includes("Win")?"#10b981":b.st=="Loss"?"#f43f5e":"#eab308";tb.innerHTML+=`<tr><td>${b.p.slice(-6)}</td><td><b>${b.t}</b></td><td>₹${b.a}</td><td style="color:${c};font-weight:800">${b.st}</td></tr>`})}
+function swH(n){document.getElementById('th1').classList.toggle('active',n==1);document.getElementById('th2').classList.toggle('active',n==2);document.getElementById('hb1').style.display=n==1?'block':'none';document.getElementById('hb2').style.display=n==2?'block':'none'}
+function tick(){
+  let d=new Date(),tot=d.getHours()*3600+d.getMinutes()*60+d.getSeconds();
+  let idx=Math.floor(tot/mode),el=tot%mode,rem=mode-el;
+  let mc=mode==30?"1000":mode==60?"2000":mode==180?"3000":"4000";
+  curP=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}${mc}${50000+idx}`;
+  document.getElementById('pid').innerText=curP;
+  let m=Math.floor(rem/60),s=rem%60;
+  document.getElementById('m1').innerText=Math.floor(m/10);document.getElementById('m2').innerText=m%10;
+  document.getElementById('s1').innerText=Math.floor(s/10);document.getElementById('s2').innerText=s%10;
+  let mk=document.getElementById('mask');
+  if(rem<=5){closeM('betM');mk.style.display='flex';document.getElementById('mval').innerText=rem}else{mk.style.display='none'}
+  if(el===0&&lastP!==curP){
+    let fp=`${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}${mc}${50000+idx-1}`;
+    lastP=curP;draw(fp);
+  }
+}
+function draw(p){
+  let n=Math.floor(Math.random()*10),sz=n>=5?"Big":"Small",col=n%2==0?"Red":"Green",vio=(n==0||n==5);
+  addH(p,n);let won=0,had=false;
+  bets.forEach(b=>{if(b.p==p&&b.st=="Pending"){had=true;let m=0;if(b.t==String(n))m=9;else if(b.t==sz||b.t==col)m=1.96;else if(b.t=="Violet"&&vio)m=4.5;if(m>0){let w=b.a*m;bal+=w;won+=w;b.st="Win +₹"+w.toFixed(0)}else{b.st="Loss"}}});
+  if(had){uBal();rBets();let wp=document.getElementById('wpop');document.getElementById('wico').innerText=won>0?"🏆":"😔";document.getElementById('wtit').innerText=won>0?"YOU WON!":"YOU LOST";document.getElementById('wtit').style.color=won>0?"#10b981":"#f43f5e";document.getElementById('wdet').innerText=`Result: ${n} (${sz} • ${col})`;document.getElementById('wamt').innerText=won>0?"+ ₹"+won.toFixed(2):"Try again";wp.style.display='block'}
+}
+function addH(p,n){
+  let c=n%2==0?"#f43f5e":"#10b981",dt=`<span class="dot" style="background:${c}"></span>`;
+  if(n==0){c="#b55fe6";dt=`<span class="dot" style="background:#f43f5e"></span> <span class="dot" style="background:#b55fe6"></span>`}
+  if(n==5){c="#b55fe6";dt=`<span class="dot" style="background:#10b981"></span> <span class="dot" style="background:#b55fe6"></span>`}
+  document.getElementById('hrows').insertAdjacentHTML('afterbegin',`<tr><td>${p}</td><td style="color:${c};font-weight:900;font-size:15px">${n}</td><td>${n>=5?'Big':'Small'}</td><td>${dt}</td></tr>`);
+  let rb=document.getElementById('rballs');rb.innerHTML="";
+  let rows=document.querySelectorAll('#hrows tr');
+  for(let i=0;i<Math.min(5,rows.length);i++){rb.innerHTML+=`<div class="mball" style="background:${rows[i].children[1].style.color}">${rows[i].children[1].innerText}</div>`}
+}
+addH('20261115100051888',0);addH('20261115100051889',8);addH('20261115100051890',6);addH('20261115100051891',4);
+setInterval(tick,1000);tick();
+</script>
+</body>
+        </html>
