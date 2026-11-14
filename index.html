@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>StarWinn</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:sans-serif;-webkit-user-select:none;user-select:none}
+input{-webkit-user-select:auto;user-select:auto}
+body{background:#0b1124;color:#fff;display:flex;justify-content:center}
+.app{width:100%;max-width:440px;min-height:100vh;background:#172147;position:relative}
+.auth{min-height:100vh;background:#131c42;padding:24px 20px;display:flex;flex-direction:column}
+.atabs{display:flex;background:#0f1633;border-radius:12px;padding:4px;margin:20px 0;border:1px solid #2b3e82}
+.atab{flex:1;text-align:center;padding:12px;font-weight:800;border-radius:10px;cursor:pointer;color:#9aa8cf}
+.atab.act{background:#2b7fff;color:#fff}
+.inp{width:100%;padding:14px;background:#0f1633;border:1px solid #2e4185;border-radius:10px;color:#fff;font-size:15px;margin-bottom:12px}
+.btn{width:100%;padding:14px;background:#2b7fff;border:none;border-radius:25px;color:#fff;font-size:16px;font-weight:900;cursor:pointer;margin-top:8px}
+.main{display:none;padding-bottom:85px}
+.nav{background:#131b3b;padding:12px 16px;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid #25346e;position:sticky;top:0;z-index:40}
+.ibtn{background:#23326b;border:1px solid #354996;color:#fff;width:36px;height:36px;border-radius:50%;font-size:16px;cursor:pointer}
+.pg{display:none}.pg.act{display:block}
+.card{background:#202f66;margin:12px;border-radius:16px;padding:16px;border:1px solid #314694}
+.bw{flex:1;padding:12px;border:none;border-radius:25px;font-weight:800;color:#fff;cursor:pointer}
+.tabs{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin:12px}
+.tab{background:#121a3b;border-radius:12px;padding:10px 4px;text-align:center;font-size:11px;font-weight:700;border:1px solid #263675;cursor:pointer;color:#9aa8cf}
+.tab.act{background:#2b7fff;color:#fff}
+.td{background:#0f1633;padding:5px 8px;border-radius:5px;font-size:19px;font-weight:900;border:1px solid #28397a}
+.ball{width:50px;height:50px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:900;cursor:pointer;border:2px solid rgba(255,255,255,.35)}
+.mask{position:absolute;inset:0;background:rgba(12,18,41,.95);border-radius:16px;display:none;flex-direction:column;justify-content:center;align-items:center;z-index:20}
+table{width:100%;border-collapse:collapse;font-size:12px}
+th,td{padding:9px 4px;text-align:left;border-bottom:1px solid #263675}
+.bnav{position:fixed;bottom:0;width:100%;max-width:440px;background:#101733;display:flex;padding:8px 0;border-top:1px solid #263675;z-index:50}
+.bi{flex:1;text-align:center;font-size:11px;color:#9aa8cf;cursor:pointer}
+.bi.act{color:#38bdf8;font-weight:800}
+.mod{position:fixed;inset:0;background:rgba(0,0,0,.85);display:none;justify-content:center;align-items:flex-end;z-index:100}
+.sht{background:#182247;width:100%;max-width:440px;border-radius:20px 20px 0 0;padding:20px;border-top:2px solid #38bdf8;max-height:85vh;overflow-y:auto}
+.chip{background:#0f1633;border:1px solid #2e4185;padding:12px;border-radius:8px;text-align:center;font-weight:800;cursor:pointer}
+.chip.act{background:#2b7fff}
+.mrow{padding:15px 16px;display:flex;justify-content:space-between;border-bottom:1px solid #293b7d;font-size:14px;font-weight:700;cursor:pointer}
+</style>
+</head>
+<body>
+<div class="app">
+  <!-- AUTH SCREEN -->
+  <div class="auth" id="sAuth">
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <span style="color:#38bdf8;font-size:12px;font-weight:700">🇮🇳 StarWinn Official</span>
+      <button class="ibtn" id="bServ0">🎧</button>
+    </div>
+    <h1 style="text-align:center;font-size:34px;font-style:italic;color:#fbbf24;margin-top:24px">StarWinn</h1>
+    <p style="text-align:center;font-size:12px;color:#9aa8cf;margin-top:4px">Register or Login to WinGo Portal</p>
+    <div class="atabs">
+      <div class="atab act" id="tReg">Register</div>
+      <div class="atab" id="tLog">Log In</div>
+    </div>
+    <input type="tel" class="inp" id="iPh" maxlength="10" placeholder="Enter 10-digit Mobile Number">
+    <div id="gOtp" style="display:flex;gap:8px;margin-bottom:12px">
+      <input type="tel" class="inp" id="iOtp" maxlength="4" placeholder="4-digit OTP" style="margin:0">
+      <button id="bOtp" style="background:#fbbf24;color:#000;border:none;border-radius:10px;padding:0 16px;font-weight:900;cursor:pointer;white-space:nowrap">Send OTP</button>
+    </div>
+    <input type="password" class="inp" id="iPw" placeholder="Enter Password">
+    <button class="btn" id="bGo">Register & Start Playing</button>
+  </div>
+
+  <!-- MAIN APP -->
+  <div class="main" id="sMain">
+    <div class="nav">
+      <div style="font-size:22px;font-weight:900;font-style:italic;color:#fbbf24">StarWinn</div>
+      <div style="display:flex;gap:10px">
+        <button class="ibtn" id="bServ1">🎧</button>
+        <button class="ibtn" id="bAcc1">👤</button>
+      </div>
+    </div>
+
+    <!-- HOME -->
+    <div class="pg act" id="pHome">
+      <div class="card" style="text-align:center">
+        <div style="font-size:12px;color:#9aa8cf">₹ Wallet Balance</div>
+        <div style="font-size:30px;font-weight:900;margin:6px 0 14px" id="vBal">₹ 1,000.00</div>
+        <div style="display:flex;gap:12px">
+          <button class="bw" style="background:#ea384d" id="bWith1">Withdraw</button>
+          <button class="bw" style="background:#10b981" id="bDep1">Deposit</button>
+        </div>
+      </div>
+
+      <div class="tabs">
+        <div class="tab act" id="m30">⏱️<br>WinGo 30s</div>
+        <div class="tab" id="m60">⏱️<br>WinGo 1m</div>
+        <div class="tab" id="m180">⏱️<br>WinGo 3m</div>
+        <div class="tab" id="m300">⏱️<br>WinGo 5m</div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+          <div>
+            <span id="bRule" style="background:rgba(255,255,255,.1);padding:4px 10px;border-radius:12px;font-size:11px;cursor:pointer">📖 Rules</span>
+            <div style="font-weight:800;margin-top:6px" id="vMode">WinGo 30sec</div>
+          </div>
+          <div style="text-align:right">
+            <div style="font-size:11px;color:#9aa8cf;margin-bottom:4px">Time remaining</div>
+            <div style="display:flex;gap:3px">
+              <div class="td" id="tm1">0</div><div class="td" id="tm2">0</div>
+              <div style="align-self:center;font-weight:900">:</div>
+              <div class="td" id="ts1">3</div><div class="td" id="ts2">0</div>
+            </div>
+          </div>
+        </div>
+        <div style="display:flex;justify-content:space-between;align-items:center;border-top:1px dashed #3b52a6;padding-top:10px">
+          <div id="vBalls" style="display:flex;gap:5px"></div>
+          <div style="font-weight:800;font-size:13px;color:#cbd5e1" id="vPid">----------------</div>
+        </div>
+      </div>
+
+      <div class="card" style="position:relative">
+        <div class="mask" id="vMask"><div style="font-size:80px;font-weight:900;color:#f43f5e" id="vMnum">5</div><div style="color:#fbbf24;font-weight:800;font-size:12px">WAITING...</div></div>
+        <div style="display:flex;gap:8px;margin-bottom:14px">
+          <button class="bw bPick" data-v="Green" data-c="#10b981" style="background:#10b981;border-radius:8px">Green</button>
+          <button class="bw bPick" data-v="Violet" data-c="#b55fe6" style="background:#b55fe6;border-radius:8px">Violet</button>
+          <button class="bw bPick" data-v="Red" data-c="#f43f5e" style="background:#f43f5e;border-radius:8px">Red</button>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:10px 6px;justify-items:center;margin-bottom:14px">
+          <div class="ball bPick" data-v="0" data-c="#b55fe6" style="background:linear-gradient(135deg,#f43f5e 50%,#b55fe6 50%)">0</div>
+          <div class="ball bPick" data-v="1" data-c="#10b981" style="background:#10b981">1</div>
+          <div class="ball bPick" data-v="2" data-c="#f43f5e" style="background:#f43f5e">2</div>
+          <div class="ball bPick" data-v="3" data-c="#10b981" style="background:#10b981">3</div>
+          <div class="ball bPick" data-v="4" data-c="#f43f5e" style="background:#f43f5e">4</div>
+          <div class="ball bPick" data-v="5" data-c="#b55fe6" style="background:linear-gradient(135deg,#10b981 50%,#b55fe6 50%)">5</div>
+          <div class="ball bPick" data-v="6" data-c="#f43f5e" style="background:#f43f5e">6</div>
+          <div class="ball bPick" data-v="7" data-c="#10b981" style="background:#10b981">7</div>
+          <div class="ball bPick" data-v="8" data-c="#f43f5e" style="background:#f43f5e">8</div>
+          <div class="ball bPick" data-v="9" data-c="#10b981" style="background:#10b981">9</div>
+        </div>
+        <div style="display:flex;gap:10px">
+          <button class="bw bPick" data-v="Big" data-c="#eab308" style="background:#eab308">Big</button>
+          <button class="bw bPick" data-v="Small" data-c="#3b82f6" style="background:#3b82f6">Small</button>
+        </div>
+      </div>
+
+      <div class="card">
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <div class="atab act" id="th1" style="padding:8px;font-size:13px">Game history (10)</div>
+          <div class="atab" id="th2" style="padding:8px;font-size:13px">My bets</div>
+        </div>
+        <div id="hb1"><table><thead><tr><th>Period</th><th>Num</th><th>Size</th><th>Color</th></tr></thead><tbody id="vHrows"></tbody></table></div>
+        <div id="hb2" style="display:none"><table><thead><tr><th>Period</th><th>Select</th><th>Amt</th><th>Status</th></tr></thead><tbody id="vMyrows"><tr><td colspan="4" style="text-align:center;color:#9aa8cf">No bets yet</td></tr></tbody></table></div>
+      </div>
+    </div>
+
+    <!-- ACCOUNT -->
+    <div class="pg" id="pAcc">
+      <div style="background:#1c295c;padding:20px 16px;border-bottom:1px solid #344ca3">
+        <div style="display:flex;align-items:center;gap:14px">
+          <div style="width:56px;height:56px;border-radius:50%;background:#fbbf24;display:flex;align-items:center;justify-content:center;font-size:26px;color:#000">👑</div>
+          <div>
+            <div style="font-size:17px;font-weight:900"><span id="vUname">Player</span> <span style="background:#fbbf24;color:#000;font-size:10px;padding:2px 8px;border-radius:10px">VIP 2</span></div>
+            <div style="font-size:12px;color:#cbd5e1;margin-top:4px">UID | 984521</div>
+            <div style="font-size:11px;color:#10b981;margin-top:2px" id="vUph">Verified ✅</div>
+          </div>
+        </div>
+        <div style="background:#131c3d;border-radius:14px;padding:14px;margin-top:16px;border:1px solid #2d4087">
+          <div style="font-size:12px;color:#9aa8cf">Total Balance</div>
+          <div style="font-size:24px;font-weight:900;margin:4px 0 12px" id="vBal2">₹ 1,000.00</div>
+          <div style="display:flex;gap:10px">
+            <button class="bw" style="background:#10b981;padding:10px" id="bDep2">💳 Deposit</button>
+            <button class="bw" style="background:#ea384d;padding:10px" id="bWith2">🏦 Withdraw</button>
+          </div>
+        </div>
+      </div>
+
+      <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;margin:12px">
+        <div class="card rBtn" data-r="bets" style="margin:0;padding:14px;cursor:pointer">🎲 <b>Bet History</b></div>
+        <div class="card rBtn" data-r="trans" style="margin:0;padding:14px;cursor:pointer">📊 <b>Transactions</b></div>
+        <div class="card rBtn" data-r="dep" style="margin:0;padding:14px;cursor:pointer">📥 <b>Deposits</b></div>
+        <div class="card rBtn" data-r="with" style="margin:0;padding:14px;cursor:pointer">📤 <b>Withdrawals</b></div>
+      </div>
+
+      <div class="card" style="padding:0">
+        <div class="mrow" id="mGift"><span>🎁 Gift Code Redeem</span><span style="color:#fbbf24">Claim ➔</span></div>
+        <div class="mrow" id="mServ"><span>🎧 24/7 Customer Service</span><span style="color:#10b981">Online ➔</span></div>
+        <div class="mrow" id="mOut" style="color:#f43f5e;border:none"><span>🚪 Log Out</span><span>➔</span></div>
+      </div>
+    </div>
+
+    <!-- BOTTOM NAV -->
+    <div class="bnav">
+      <div class="bi act" id="nHome">🏠<br>Home</div>
+      <div class="bi" id="nGift">🎁<br>Activity</div>
+      <div class="bi" id="nWal">💳<br>Wallet</div>
+      <div class="bi" id="nAcc">👤<br>Account</div>
+    </div>
+  </div>
+</div>
+
+<!-- MODALS -->
+<div class="mod" id="mBet"><div class="sht">
+  <div id="bBan" style="padding:12px;border-radius:10px;text-align:center;font-weight:800;margin-bottom:12px">Select</div>
+  <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0">
+    <div class="chip act" data-a="10">₹10</div><div class="chip" data-a="50">₹50</div><div class="chip" data-a="100">₹100</div><div class="chip" data-a="500">₹500</div>
+  </div>
+  <div style="display:flex;gap:10px;margin-top:14px">
+    <button class="bw" style="background:#334155" id="bCan">Cancel</button>
+    <button class="bw" style="background:#2b7fff;flex:2" id="bCnf">Confirm ₹10</button>
+  </div>
+</div></div>
+
+<div class="mod" id="mGft"><div class="sht">
+  <div style="display:flex;justify-content:space-between;margin-bottom:12px"><b>🎁 Gift Code (Try: STAR100)</b><span class="cls" style="cursor:pointer">✕</span></div>
+  <input class="inp" id="iGft" placeholder="Enter Code">
+  <button class="btn" style="background:#fbbf24;color:#000" id="bClm">Redeem Now</button>
+</div></div>
+
+<div class="mod" id="mSrv"><div class="sht">
+  <div style="display:flex;justify-content:space-between;margin-bottom:12px"><b>🎧 24/7 Customer Service</b><span class="cls" style="cursor:pointer">✕</span></div>
+  <button class="btn" style="background:#223168;border-radius:10px" onclick="alert('Live Agent Connected!')">💬 Live Chat Support</button>
+  <button class="btn" style="background:#223168;border-radius:10px" onclick="alert('UPI Deposits auto-credit in 2 mins.')">💰 Deposit Issue Check</button>
+</div></div>
+
+<div class="mod" id="mRec"><div class="sht">
+  <div style="display:flex;justify-content:space-between;margin-bottom:12px"><b id="rTit">Records</b><span class="cls" style="cursor:pointer">✕</span></div>
+  <div id="rBod" style="max-height:280px;overflow-y:auto"></div>
+</div></div>
+
+<script>
+window.onload=function(){var bal=1000,mode=30,curP="",lastP="",sel="",amt=10,otp="",atype="reg",bets=[],deps=[{d:"Today",a:1000}],withs=[],trns=[{t:"Bonus",a:"+₹1000",c:"#10b981"}];function g(i){return document.getElementById(i)}function uBal(){g("vBal").innerText="₹ "+bal.toFixed(2);g("vBal2").innerText="₹ "+bal.toFixed(2)}function enter(ph){g("sAuth").style.display="none";g("sMain").style.display="block";g("vUname").innerText="Player_"+ph.slice(-4);g("vUph").innerText="+91 "+ph.slice(0,5)+"***** ✅"}var sv=localStorage.getItem("sw_ph");if(sv)enter(sv);g("tReg").onclick=function(){atype="reg";g("tReg").className="atab act";g("tLog").className="atab";g("gOtp").style.display="flex";g("bGo").innerText="Register & Start Playing"};g("tLog").onclick=function(){atype="log";g("tLog").className="atab act";g("tReg").className="atab";g("gOtp").style.display="none";g("bGo").innerText="Log In Now"};g("bOtp").onclick=function(){var p=g("iPh").value.trim();if(p.length<10){alert("Enter 10 digit mobile!");return}otp=String(Math.floor(1000+Math.random()*9000));alert("📩 StarWinn OTP: "+otp)};g("bGo").onclick=function(){var p=g("iPh").value.trim(),w=g("iPw").value.trim();if(p.length<10||!w){alert("Enter mobile & password!");return}if(atype=="reg"&&(!otp||g("iOtp").value.trim()!=otp)){alert("Click Send OTP & enter 4-digit code!");return}localStorage.setItem("sw_ph",p);enter(p)};function pg(x){g("pHome").className=x=="h"?"pg act":"pg";g("pAcc").className=x=="a"?"pg act":"pg";g("nHome").className=x=="h"?"bi act":"bi";g("nAcc").className=x=="a"?"bi act":"bi";window.scrollTo(0,0)}g("nHome").onclick=function(){pg("h")};g("nAcc").onclick=function(){pg("a")};g("bAcc1").onclick=function(){pg("a")};document.querySelectorAll(".cls").forEach(function(e){e.onclick=function(){document.querySelectorAll(".mod").forEach(function(m){m.style.display="none"})}});g("bServ0").onclick=function(){g("mSrv").style.display="flex"};g("bServ1").onclick=function(){g("mSrv").style.display="flex"};g("mServ").onclick=function(){g("mSrv").style.display="flex"};g("nGift").onclick=function(){g("mGft").style.display="flex"};g("mGift").onclick=function(){g("mGft").style.display="flex"};g("mOut").onclick=function(){localStorage.removeItem("sw_ph");location.reload()};g("bRule").onclick=function(){alert("Green/Red=2x | Violet=4.5x | Number=9x")};function dep(){var a=prompt("Deposit Amount (₹):","500");if(a>0){bal+=+a;deps.unshift({d:"Now",a:+a});trns.unshift({t:"Deposit",a:"+₹"+a,c:"#10b981"});uBal();alert("✅ ₹"+a+" Added!")}}function wth(){var a=prompt("Withdraw Amount (₹):","500");if(a>0&&a<=bal){bal-=+a;withs.unshift({d:"Now",a:+a});trns.unshift({t:"Withdraw",a:"-₹"+a,c:"#f43f5e"});uBal();alert("🏦 Request Submitted!")}else if(a>bal)alert("Low Balance!")}g("bDep1").onclick=dep;g("bDep2").onclick=dep;g("nWal").onclick=dep;g("bWith1").onclick=wth;g("bWith2").onclick=wth;g("bClm").onclick=function(){var c=g("iGft").value.trim().toUpperCase();if(c=="STAR100"){bal+=100;trns.unshift({t:"Gift",a:"+₹100",c:"#fbbf24"});uBal();g("mGft").style.display="none";alert("🎁 ₹100 Added!")}else alert("Try code: STAR100")};document.querySelectorAll(".rBtn").forEach(function(b){b.onclick=function(){var r=b.dataset.r,h="";g("rTit").innerText=r.toUpperCase();if(r=="bets")h=bets.length?bets.map(function(x){return"<div style='padding:8px;border-bottom:1px solid #2b3b75'>"+x.t+" • ₹"+x.a+" • <b>"+x.s+"</b></div>"}).join(""):"No bets";else if(r=="dep")h=deps.map(function(x){return"<div style='padding:8px;border-bottom:1px solid #2b3b75'>₹"+x.a+" ("+x.d+")</div>"}).join("");else if(r=="with")h=withs.length?withs.map(function(x){return"<div style='padding:8px;border-bottom:1px solid #2b3b75'>₹"+x.a+" ("+x.d+")</div>"}).join(""):"No withdrawals";else h=trns.map(function(x){return"<div style='padding:8px;border-bottom:1px solid #2b3b75;color:"+x.c+"'>"+x.t+": "+x.a+"</div>"}).join("");g("rBod").innerHTML=h;g("mRec").style.display="flex"}});[30,60,180,300].forEach(function(s){g("m"+s).onclick=function(){mode=s;[30,60,180,300].forEach(function(x){g("m"+x).className="tab"});g("m"+s).className="tab act";g("vMode").innerText="WinGo "+(s==30?"30sec":(s/60)+" Min");tk()}});document.querySelectorAll(".bPick").forEach(function(el){el.onclick=function(){sel=el.dataset.v;amt=10;g("bBan").innerText="Select: "+sel;g("bBan").style.background=el.dataset.c;g("bCnf").innerText="Confirm ₹10";g("mBet").style.display="flex"}});document.querySelectorAll(".chip").forEach(function(c){c.onclick=function(){amt=+c.dataset.a;document.querySelectorAll(".chip").forEach(function(x){x.className="chip"});c.className="chip act";g("bCnf").innerText="Confirm ₹"+amt}});g("bCan").onclick=function(){g("mBet").style.display="none"};g("bCnf").onclick=function(){if(amt>bal){alert("Low Balance!");return}bal-=amt;trns.unshift({t:"Bet "+sel,a:"-₹"+amt,c:"#f43f5e"});uBal();bets.unshift({p:curP,t:sel,a:amt,s:"Pending"});rMy();g("mBet").style.display="none"};function rMy(){var tb=g("vMyrows");tb.innerHTML="";bets.slice(0,10).forEach(function(b){tb.innerHTML+="<tr><td>"+b.p.slice(-5)+"</td><td><b>"+b.t+"</b></td><td>₹"+b.a+"</td><td>"+b.s+"</td></tr>"})}g("th1").onclick=function(){g("th1").className="atab act";g("th2").className="atab";g("hb1").style.display="block";g("hb2").style.display="none"};g("th2").onclick=function(){g("th2").className="atab act";g("th1").className="atab";g("hb2").style.display="block";g("hb1").style.display="none"};function addH(p,n){var c=n%2==0?"#f43f5e":"#10b981";if(n==0||n==5)c="#b55fe6";var t
