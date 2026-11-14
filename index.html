@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>StarWinn - Official WinGo Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #1c2752;
+      --card-bg: #223168;
+      --card-dark: #192348;
+      --green: #10b981;
+      --red: #f43f5e;
+      --violet: #b55fe6;
+      --gold: #f59e0b;
+      --tab-active: #2b7fff;
+      --text-muted: #9aa8cf;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+    body { background: #0f162e; color: #fff; display: flex; justify-content: center; }
+    .app { width: 100%; max-width: 440px; min-height: 100vh; background: var(--bg); padding-bottom: 80px; position: relative; }
+
+    /* Top Nav */
+    .nav { background: #182247; padding: 12px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #233166; position: sticky; top: 0; z-index: 40; }
+    .brand-logo { font-size: 22px; font-weight: 900; font-style: italic; color: #fbbf24; letter-spacing: 0.5px; }
+    .nav-actions { display: flex; gap: 10px; align-items: center; }
+    .icon-btn { background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12); width: 34px; height: 34px; border-radius: 50%; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 16px; }
+
+    /* User Profile Bar */
+    .user-strip { background: linear-gradient(90deg, #1d2c60, #152047); padding: 9px 16px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #27376d; font-size: 12px; }
+    .user-info b { color: var(--gold); }
+    .auth-btn { background: #3b82f6; border: none; padding: 4px 12px; border-radius: 14px; color: white; font-size: 11px; font-weight: 700; cursor: pointer; }
+
+    /* Wallet Card */
+    .wallet-card { background: var(--card-bg); margin: 12px 14px; border-radius: 16px; padding: 16px; text-align: center; box-shadow: 0 4px 15px rgba(0,0,0,0.15); border: 1px solid #2e4185; }
+    .bal-title { font-size: 13px; color: var(--text-muted); }
+    .bal-num { font-size: 28px; font-weight: 900; margin: 4px 0 14px; color: #ffffff; }
+    .wallet-actions { display: flex; gap: 10px; }
+    .btn-w { flex: 1; padding: 10px 0; border: none; border-radius: 25px; font-size: 14px; font-weight: 800; color: #fff; cursor: pointer; }
+    .btn-with { background: #ea384d; }
+    .btn-dep { background: #10b981; }
+
+    /* Mode Tabs */
+    .mode-tabs { display: grid; grid-template-columns: repeat(4, 1fr); gap: 6px; margin: 12px 14px; }
+    .tab-item { background: var(--card-dark); border-radius: 12px; padding: 10px 4px; text-align: center; border: 1px solid #2a3c7a; cursor: pointer; transition: 0.2s; }
+    .tab-item.active { background: var(--tab-active); border-color: #60a5fa; box-shadow: 0 0 12px rgba(43, 127, 255, 0.4); }
+    .tab-icon { font-size: 16px; margin-bottom: 4px; }
+    .tab-title { font-size: 11px; font-weight: 700; line-height: 1.2; }
+
+    /* Ticket Box */
+    .ticket-box { background: var(--card-bg); margin: 12px 14px; border-radius: 16px; padding: 14px; border: 1px solid #2e4185; }
+    .ticket-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 12px; }
+    .how-play { background: rgba(255,255,255,0.08); font-size: 11px; padding: 4px 10px; border-radius: 20px; color: var(--text-muted); cursor: pointer; }
+    .timer-wrap { text-align: right; }
+    .timer-lbl { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; }
+    .timer-digits { display: flex; gap: 3px; justify-content: flex-end; }
+    .t-digit { background: #131c3a; color: #fff; font-size: 18px; font-weight: 900; padding: 4px 6px; border-radius: 4px; min-width: 22px; text-align: center; border: 1px solid #2a3a69; }
+
+    .ticket-btm { display: flex; justify-content: space-between; align-items: center; border-top: 1px dashed #34488f; padding-top: 10px; }
+    .recent-balls { display: flex; gap: 4px; }
+    .mini-ball { width: 22px; height: 22px; border-radius: 50%; font-size: 11px; font-weight: 900; display: flex; align-items: center; justify-content: center; color: #fff; }
+    .period-live { font-size: 13px; font-weight: 800; color: #cbd5e1; letter-spacing: 0.5px; }
+
+    /* Bet Section */
+    .bet-container { background: var(--card-bg); margin: 12px 14px; border-radius: 16px; padding: 14px; border: 1px solid #2e4185; position: relative; }
+    .colors-group { display: flex; gap: 8px; margin-bottom: 14px; }
+    .c-btn { flex: 1; padding: 11px 0; border: none; border-radius: 8px; font-size: 14px; font-weight: 800; color: #fff; cursor: pointer; }
+    .bg-green { background: var(--green); }
+    .bg-violet { background: var(--violet); }
+    .bg-red { background: var(--red); }
+
+    .balls-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px 6px; justify-items: center; margin-bottom: 14px; }
+    .ball-wrap { width: 50px; height: 50px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 900; cursor: pointer; border: 2px solid rgba(255,255,255,0.25); transition: transform 0.1s; }
+    .ball-wrap:active { transform: scale(0.92); }
+    .b-0 { background: linear-gradient(135deg, var(--red) 50%, var(--violet) 50%); }
+    .b-5 { background: linear-gradient(135deg, var(--green) 50%, var(--violet) 50%); }
+    .b-red { background: var(--red); }
+    .b-green { background: var(--green); }
+    .ball-inner { width: 34px; height: 34px; border-radius: 50%; background: rgba(255,255,255,0.2); display: flex; align-items: center; justify-content: center; color: #fff; }
+
+    .size-group { display: flex; gap: 8px; }
+    .btn-s { flex: 1; padding: 12px 0; border: none; border-radius: 25px; font-size: 15px; font-weight: 800; color: #fff; cursor: pointer; }
+    .btn-big { background: #eab308; }
+    .btn-small { background: #3b82f6; }
+
+    /* 5s Lock Mask */
+    .mask-panel { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: rgba(15, 22, 46, 0.94); border-radius: 16px; display: none; flex-direction: column; justify-content: center; align-items: center; z-index: 30; }
+    .mask-count { font-size: 90px; font-weight: 900; color: #f43f5e; text-shadow: 0 0 25px rgba(244, 63, 94, 0.6); }
+    .mask-text { font-size: 13px; font-weight: 800; color: var(--gold); letter-spacing: 1px; }
+
+    /* History Card & Tabs */
+    .history-card { background: var(--card-bg); margin: 12px 14px; border-radius: 16px; padding: 14px; border: 1px solid #2e4185; }
+    .h-tabs { display: flex; gap: 10px; margin-bottom: 12px; border-bottom: 1px solid #2e4185; padding-bottom: 8px; }
+    .h-tab-btn { flex: 1; text-align: center; padding: 6px; font-size: 13px; font-weight: 700; color: var(--text-muted); cursor: pointer; border-radius: 6px; }
+    .h-tab-btn.active { background: #2b7fff; color: #fff; }
+    table { width: 100%; border-collapse: collapse; font-size: 12px; }
+    th { text-align: left; padding: 8px 4px; color: var(--text-muted); font-size: 11px; }
+    td { padding: 9px 4px; border-bottom: 1px solid #28396e; }
+    .res-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; vertical-align: middle; }
+
+    /* Bottom Navbar */
+    .bottom-nav { position: fixed; bottom: 0; width: 100%; max-width: 440px; background: #131b38; border-top: 1px solid #233166; display: flex; justify-content: space-around; padding: 8px 0; z-index: 60; }
+    .b-item { text-align: center; color: var(--text-muted); font-size: 10px; cursor: pointer; flex: 1; }
+    .b-item.active { color: #38bdf8; font-weight: 700; }
+    .b-icon { font-size: 18px; margin-bottom: 2px; }
+
+    /* Modal Popups */
+    .modal-overlay { position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.78); display: none; justify-content: center; align-items: flex-end; z-index: 100; }
+    .modal-sheet { background: #182247; width: 100%; max-width: 440px; border-radius: 20px 20px 0 0; padding: 20px; border-top: 2px solid #38bdf8; max-height: 85vh; overflow-y: auto; }
+    .modal-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; }
+    .modal-title { font-size: 17px; font-weight: 800; color: #fff; }
+    .btn-close { background: none; border: none; color: #fff; font-size: 20px; cursor: pointer; }
+
+    /* Bet Slip Styling */
+    .bet-banner { padding: 12px; border-radius: 10px; text-align: center; font-weight: 800; font-size: 16px; margin-bottom: 14px; }
+    .amt-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+    .amt-chip { background: #101833; border: 1px solid #2e4185; padding: 10px; border-radius: 8px; text-align: center; font-weight: 700; cursor: pointer; }
+    .amt-chip.active { background: #2b7fff; border-color: #60a5fa; }
+    .mult-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; margin-bottom: 16px; }
+    .mult-chip { background: #101833; border: 1px solid #2e4185; padding: 8px; border-radius: 6px; text-align: center; font-size: 12px; font-weight: 700; cursor: pointer; }
+    .mult-chip.active { background: #10b981; border-color: #34d399; }
+
+    /* Auth Form */
+    .tab-switch { display: flex; gap: 10px; margin-bottom: 16px; border-bottom: 1px solid #2e4185; padding-bottom: 8px; }
+    .sw-btn { flex: 1; padding: 8px; border: none; background: none; color: var(--text-muted); font-weight: 700; font-size: 14px; cursor: pointer; text-align: center; }
+    .sw-btn.active { color: #38bdf8; border-bottom: 2px solid #38bdf8; }
+    .input-field { width: 100%; padding: 12px; background: #101833; border: 1px solid #2e4185; border-radius: 8px; color: #fff; font-size: 14px; margin-bottom: 12px; outline: none; }
+    .btn-submit { width: 100%; padding: 13px; background: linear-gradient(90deg, #2563eb, #38bdf8); border: none; border-radius: 10px; color: #fff; font-size: 15px; font-weight: 800; cursor: pointer; }
+
+    /* Win / Loss Result Popup */
+    .result-popup { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 300px; background: linear-gradient(180deg, #1e293b, #0f172a); border: 2px solid var(--gold); border-radius: 20px; padding: 24px 18px; text-align: center; z-index: 200; display: none; box-shadow: 0 10px 40px rgba(0,0,0,0.8); }
+    .res-badge { font-size:
