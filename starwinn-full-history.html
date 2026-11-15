@@ -1332,3 +1332,21 @@ setInterval(tick,1000);tick();
 </script>
 </body>
 </html>
+<script>
+  function syncWithBridgeServer() {
+    fetch('https://star-winn.onrender.com/api/tiranga-sync') // यहाँ अपना असली Render URL चेक कर लेना
+      .then(res => res.json())
+      .then(res => {
+        if(res.success && res.data) {
+          var remoteData = res.data;
+          console.log("Live Bridge Sync:", remoteData.period, remoteData.number);
+        }
+      })
+      .catch(err => {
+        console.log("Waiting for bridge server...");
+      });
+  }
+
+  // हर 2 सेकंड में सिंक चेक करेगा
+  setInterval(syncWithBridgeServer, 2000);
+</script>
