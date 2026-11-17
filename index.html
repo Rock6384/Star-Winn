@@ -3621,7 +3621,111 @@
 
     function closeModal() {
       document.getElementById('modalOverlay').classList.add('hidden');
+ <script>
+  // --- 1. वेलकम बोनस को ₹51 सेट करने का कोड ---
+  window.addEventListener('DOMContentLoaded', (event) => {
+    let currentBal = parseFloat(localStorage.getItem('star_wallet_bal')) || 51.00;
+    if (currentBal > 10000) {
+      currentBal = 51.00;
+      localStorage.setItem('star_wallet_bal', '51.00');
     }
+    // बैलेंस डिस्प्ले को अपडेट करें
+    document.querySelectorAll('.bals, #bal, #hdrBalance, #accBalanceDisplay, #wingoBalLbl').forEach(el => {
+      if (el) el.innerText = '₹' + currentBal.toFixed(2);
+    });
+  });
+
+  // --- 2. VIP 1 से 10 तक के लेवल्स और सेक्शंस जोड़ने का कोड ---
+  const VIP_DATA_DYNAMIC = [
+    { level: 1, name: "VIP 1", upgradeExp: "0 EXP", levelUpBonus: "₹10", monthlyReward: "₹20", safeRate: "0.05%", rebate: "0.40%" },
+    { level: 2, name: "VIP 2", upgradeExp: "5,000 EXP", levelUpBonus: "₹50", monthlyReward: "₹100", safeRate: "0.06%", rebate: "0.45%" },
+    { level: 3, name: "VIP 3", upgradeExp: "20,000 EXP", levelUpBonus: "₹200", monthlyReward: "₹400", safeRate: "0.08%", rebate: "0.50%" },
+    { level: 4, name: "VIP 4", upgradeExp: "70,000 EXP", levelUpBonus: "₹500", monthlyReward: "₹1,000", safeRate: "0.10%", rebate: "0.55%" },
+    { level: 5, name: "VIP 5", upgradeExp: "200,000 EXP", levelUpBonus: "₹1,500", monthlyReward: "₹3,000", safeRate: "0.12%", rebate: "0.60%" },
+    { level: 6, name: "VIP 6", upgradeExp: "500,000 EXP", levelUpBonus: "₹4,000", monthlyReward: "₹8,000", safeRate: "0.15%", rebate: "0.65%" },
+    { level: 7, name: "VIP 7", upgradeExp: "1,500,000 EXP", levelUpBonus: "₹10,000", monthlyReward: "₹20,000", safeRate: "0.18%", rebate: "0.70%" },
+    { level: 8, name: "VIP 8", upgradeExp: "4,000,000 EXP", levelUpBonus: "₹25,000", monthlyReward: "₹50,000", safeRate: "0.20%", rebate: "0.75%" },
+    { level: 9, name: "VIP 9", upgradeExp: "10,000,000 EXP", levelUpBonus: "₹60,000", monthlyReward: "₹120,000", safeRate: "0.23%", rebate: "0.80%" },
+    { level: 10, name: "VIP 10", upgradeExp: "30,000,000 EXP", levelUpBonus: "₹150,000", monthlyReward: "₹300,000", safeRate: "0.25%", rebate: "1.00%" }
+  ];
+
+  function injectVipLevels() {
+    let vipContainer = document.getElementById('vipLevelsContainer') || document.getElementById('pgVipCenter');
+    if (vipContainer && !document.getElementById('dynamicVipList')) {
+      const wrapper = document.createElement('div');
+      wrapper.id = 'dynamicVipList';
+      wrapper.className = 'space-y-4 p-4';
+      wrapper.innerHTML = '<h3 class="text-lg font-black text-amber-400 mb-2">👑 VIP 1 to 10 Levels</h3>' + 
+        VIP_DATA_DYNAMIC.map(v => `
+          <div class="bg-[#1c2754] border border-[#384b96] rounded-2xl p-4 shadow-xl space-y-3">
+            <div class="flex justify-between items-center">
+              <span class="text-base font-black text-amber-400">${v.name}</span>
+              <span class="text-xs bg-sky-500/20 text-sky-300 font-bold px-2.5 py-1 rounded-lg">${v.upgradeExp}</span>
+            </div>
+            <div class="grid grid-cols-2 gap-2 text-xs">
+              <div class="bg-[#131b3a] p-2.5 rounded-xl"><span class="text-slate-400">Level Up Bonus:</span><div class="font-black text-emerald-400 mt-0.5">${v.levelUpBonus}</div></div>
+              <div class="bg-[#131b3a] p-2.5 rounded-xl"><span class="text-slate-400">Monthly Reward:</span><div class="font-black text-amber-300 mt-0.5">${v.monthlyReward}</div></div>
+              <div class="bg-[#131b3a] p-2.5 rounded-xl"><span class="text-slate-400">Safe Interest:</span><div class="font-black text-sky-400 mt-0.5">${v.safeRate}</div></div>
+              <div class="bg-[#131b3a] p-2.5 rounded-xl"><span class="text-slate-400">Rebate Rate:</span><div class="font-black text-purple-300 mt-0.5">${v.rebate}</div></div>
+            </div>
+          </div>
+        `).join('');
+      vipContainer.appendChild(wrapper);
+    }
+  }
+  setInterval(injectVipLevels, 1000);
+
+  // --- 3. Win/Loss तिरंगा पॉप-अप सिस्टम ---
+  function showTirangaResultPopup(isWin, wonAmount, winningNum, periodId) {
+    let overlay = document.getElementById('wingoResultOverlay');
+    if (!overlay) {
+      overlay = document.createElement('div');
+      overlay.id = 'wingoResultOverlay';
+      overlay.className = 'fixed inset-0 z-[70] bg-black/75 backdrop-blur-xs flex flex-col items-center justify-center p-5';
+      document.body.appendChild(overlay);
+    }
+
+    const isGreen = winningNum % 2 !== 0;
+    const colorName = winningNum === 0 ? 'Red Violet' : winningNum === 5 ? 'Green Violet' : isGreen ? 'Green' : 'Red';
+    const badgeBg = isWin ? 'bg-amber-400 text-red-950' : (isGreen ? 'bg-[#10b981] text-white' : 'bg-[#ef4444] text-white');
+
+    if (isWin) {
+      overlay.innerHTML = `
+        <div class="w-full max-w-[330px] rounded-3xl bg-gradient-to-b from-[#ef4444] via-[#dc2626] to-[#991b1b] border-2 border-amber-300/85 pt-10 pb-5 px-5 text-center relative shadow-2xl">
+          <div class="w-20 h-20 rounded-full bg-gradient-to-b from-amber-200 via-amber-400 to-orange-500 border-4 border-white shadow-xl flex items-center justify-center text-4xl absolute -top-10 left-1/2 -translate-x-1/2">🚀</div>
+          <h3 class="text-2xl font-black text-amber-200 tracking-tight mt-1">Congratulations</h3>
+          <div class="flex items-center justify-center gap-1.5 my-3 text-[11px] font-extrabold text-white">
+            <span>Result:</span>
+            <span class="px-2.5 py-0.5 rounded-md ${badgeBg}">${colorName} (${winningNum})</span>
+          </div>
+          <div class="bg-white rounded-2xl p-4 text-slate-900 shadow-inner">
+            <div class="text-xs font-extrabold text-emerald-600 uppercase">Win Bonus</div>
+            <div class="text-2xl font-black text-emerald-600 mt-0.5">+₹${wonAmount.toFixed(2)}</div>
+            <div class="text-[10px] font-semibold text-slate-500 mt-2">Period ID: <span class="font-mono font-bold">${periodId}</span></div>
+          </div>
+          <button type="button" onclick="document.getElementById('wingoResultOverlay').classList.add('hidden')" class="mt-4 px-6 py-2 rounded-full border-2 border-white text-white font-bold text-sm bg-black/30">Close</button>
+        </div>
+      `;
+    } else {
+      overlay.innerHTML = `
+        <div class="w-full max-w-[330px] rounded-3xl bg-gradient-to-b from-[#1e293b] via-[#0f172a] to-[#020617] border-2 border-slate-600 pt-10 pb-5 px-5 text-center relative shadow-2xl">
+          <div class="w-20 h-20 rounded-full bg-slate-700 border-4 border-slate-500 shadow-xl flex items-center justify-center text-4xl absolute -top-10 left-1/2 -translate-x-1/2">😢</div>
+          <h3 class="text-2xl font-black text-slate-200 tracking-tight mt-1">LOSS</h3>
+          <div class="flex items-center justify-center gap-1.5 my-3 text-[11px] font-extrabold text-slate-300">
+            <span>Result:</span>
+            <span class="px-2.5 py-0.5 rounded-md ${badgeBg}">${colorName} (${winningNum})</span>
+          </div>
+          <div class="bg-white rounded-2xl p-4 text-slate-900 shadow-inner">
+            <div class="text-2xl font-black text-rose-600">Loss</div>
+            <div class="text-[10px] font-semibold text-slate-500 mt-2">Period ID: <span class="font-mono font-bold">${periodId}</span></div>
+          </div>
+          <button type="button" onclick="document.getElementById('wingoResultOverlay').classList.add('hidden')" class="mt-4 px-6 py-2 rounded-full border-2 border-white text-white font-bold text-sm bg-black/30">Close</button>
+        </div>
+      `;
+    }
+    overlay.classList.remove('hidden');
+  }
+</script>   }
   </script>
 </body>
 </html>
