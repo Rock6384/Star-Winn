@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>StarWinn - Official Gaming Portal</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;pointer-events:auto!important}
+body{background:#070b19;color:#fff;display:flex;justify-content:center;touch-action:manipulation!important}
+.app{width:100%;max-width:440px;min-height:100vh;background:#131b3a;position:relative;overflow-x:hidden;padding-bottom:80px}
+.hide{display:none!important}
+
+/* GENERAL UI */
+.brand-mark{display:inline-flex;align-items:center;gap:6px;font-weight:900;font-style:italic;font-size:21px;background:linear-gradient(90deg,#fbbf24,#f59e0b,#fff);-webkit-background-clip:text;-webkit-text-fill-color:transparent;cursor:pointer}
+.brand-badge{background:linear-gradient(135deg,#fbbf24,#d97706);color:#000;-webkit-text-fill-color:#000;font-size:11px;padding:2px 6px;border-radius:6px;font-weight:900}
+.toast-pop{position:fixed;top:22px;left:50%;transform:translateX(-50%);background:linear-gradient(135deg,#1e293b,#0f172a);border:1.5px solid #38bdf8;color:#fff;padding:12px 20px;border-radius:14px;font-size:13px;font-weight:700;z-index:999;box-shadow:0 8px 25px rgba(0,0,0,.8);display:flex;align-items:center;gap:10px;max-width:90%}
+
+/* AUTH */
+.auth{min-height:100vh;background:linear-gradient(180deg,#182452 0%,#0f1633 100%);padding:20px;position:absolute;inset:0;z-index:200}
+.atabs{display:flex;border-bottom:1px solid #2b3c7a;margin:18px 0}
+.atab{flex:1;text-align:center;padding:12px;font-weight:800;color:#8c9bc4;cursor:pointer;border-bottom:3px solid transparent;font-size:14px}
+.atab.act{color:#38bdf8;border-bottom-color:#38bdf8}
+.lbl{font-size:13px;color:#cbd5e1;margin:12px 0 6px;font-weight:600}
+.inp-box{display:flex;background:#0b1026;border:1px solid #2a3b78;border-radius:10px;align-items:center;padding:0 12px;margin-bottom:10px}
+.inp-box input{flex:1;background:transparent;border:none;color:#fff;padding:13px 8px;font-size:14px;outline:none}
+.btn-p{width:100%;padding:14px;background:linear-gradient(90deg,#2563eb,#38bdf8);border:none;border-radius:25px;color:#fff;font-size:15px;font-weight:800;margin-top:14px;cursor:pointer;box-shadow:0 4px 15px rgba(37,99,235,.4)}
+
+/* HEADER & NAV */
+.hdr{background:#0f1633;padding:12px 15px;display:flex;justify-content:space-between;align-items:center;position:sticky;top:0;z-index:40;border-bottom:1px solid #24336b}
+.bnav{position:fixed;bottom:0;width:100%;max-width:440px;background:#0b1026;display:flex;padding:8px 0;border-top:1px solid #263675;z-index:150;align-items:center}
+.bi{flex:1;text-align:center;font-size:11px;color:#9aa8cf;cursor:pointer}
+.bi.act{color:#38bdf8;font-weight:800}
+
+/* CARDS & SECTIONS */
+.sec-card{background:#1c295c;margin:12px;border-radius:16px;padding:14px;border:1px solid #314694}
+.grid-menu{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px}
+.g-item{background:#1c295c;padding:12px 6px;border-radius:12px;text-align:center;font-size:11px;font-weight:700;cursor:pointer;border:1px solid #314694}
+.list-row{display:flex;align-items:center;justify-content:space-between;padding:12px 14px;background:#1c295c;margin:8px 12px;border-radius:12px;cursor:pointer;border:1px solid #314694;font-size:13px;font-weight:700}
+</style>
+</head>
+<body>
+<div class="app">
+
+<div id="toastBox" class="toast-pop hide"><span id="toastIco">✅</span><span id="toastTxt">Notification</span></div>
+
+<!-- 1. AUTH SCREEN -->
+<div class="auth" id="pgAuth">
+  <div style="text-align:center;margin:30px 0">
+    <div class="brand-mark" style="font-size:34px"><span class="brand-badge">★</span> StarWinn</div>
+    <p style="font-size:12px;color:#9aa8cf;margin-top:6px">Official Licensed Gaming Portal</p>
+  </div>
+  <div class="atabs">
+    <div class="atab act" id="tabL" onclick="setAuthMode('log')">📱 Login</div>
+    <div class="atab" id="tabR" onclick="setAuthMode('reg')">📝 Register</div>
+  </div>
+  <div class="lbl">📱 Phone number</div>
+  <div class="inp-box"><span style="color:#9aa8cf;font-weight:700">+91 ▾</span><input type="tel" id="inPh" maxlength="10" placeholder="Enter 10-digit number"></div>
+  <div class="lbl">🔒 Password</div>
+  <div class="inp-box"><input type="password" id="inPw" placeholder="Enter password"></div>
+  <button type="button" class="btn-p" id="btnAuthAction" onclick="handleAuth()">Log In</button>
+</div>
+
+<!-- 2. MAIN APP CONTAINER -->
+<div class="main hide" id="pgMain">
+  <div class="hdr">
+    <div class="brand-mark"><span>★</span> StarWinn</div>
+    <span style="background:#1c295c;padding:5px 10px;border-radius:14px;font-size:12px;font-weight:800;color:#fbbf24" id="hdrBal">₹ 1,270.00</span>
+  </div>
+
+  <!-- HOME TAB -->
+  <div id="tabHome">
+    <div style="margin:12px;background:linear-gradient(135deg,#1d4ed8,#0284c7);border-radius:16px;padding:16px;border:1px solid #60a5fa">
+      <div style="font-size:10px;background:#fbbf24;color:#000;display:inline-block;padding:2px 8px;border-radius:8px;font-weight:900">ANNOUNCEMENT</div>
+      <h3 style="margin:6px 0;font-size:17px">Beware of Fake Websites & Scams!</h3>
+      <p style="font-size:11px;color:#e2e8f0">Always use our official link for secure gaming.</p>
+    </div>
+
+    <div class="grid-menu">
+      <div class="g-item" onclick="showToast('🎮','Opening WinGo Lottery...')">🎲<br>WinGo</div>
+      <div class="g-item" onclick="showToast('✈️','Opening Aviator...')">✈️<br>Aviator</div>
+      <div class="g-item" onclick="showToast('🎰','Opening Casino...')">🎰<br>Casino</div>
+      <div class="g-item" onclick="showToast('🃏','Opening Rummy...')">🃏<br>Rummy</div>
+    </div>
+
+    <div class="sec-card">
+      <b>🏆 Live Winning Information</b>
+      <div style="font-size:12px;color:#9aa8cf;margin-top:6px">Mem***0ND • Won ₹980.00</div>
+      <div style="font-size:12px;color:#9aa8cf;margin-top:4px">Mem***OND • Won ₹39.20</div>
+    </div>
+  </div>
+
+  <!-- ACTIVITY TAB -->
+  <div id="tabActivity" class="hide" style="padding:4px 0">
+    <div style="padding:12px 16px;font-weight:900;font-size:16px">🎁 Activity & Bonus Center</div>
+    <div class="sec-card">
+      <b>Daily Check-in Bonus</b>
+      <p style="font-size:12px;color:#cbd5e1;margin:6px 0">Claim attendance reward of ₹100.</p>
+      <button class="btn-p" style="margin-top:4px" onclick="showToast('🎁','Bonus Claimed Successfully (+₹100)')">Claim Bonus</button>
+    </div>
+    <div class="sec-card">
+      <b>First Deposit Bonus</b>
+      <p style="font-size:12px;color:#cbd5e1;margin:6px 0">Get up to ₹10,000 extra on your first deposit.</p>
+      <button class="btn-p" style="background:#f59e0b;margin-top:4px" onclick="showToast('💎','Deposit gateway opening...')">Deposit Now</button>
+    </div>
+  </div>
+
+  <!-- PROMOTION TAB -->
+  <div id="tabPromo" class="hide" style="padding:4px 0">
+    <div style="padding:12px 16px;font-weight:900;font-size:16px">🤝 Promotion & Affiliate</div>
+    <div class="sec-card">
+      <b>Invite Friends & Earn Commission</b>
+      <p style="font-size:12px;color:#cbd5e1;margin:6px 0">Earn up to 1.4% agent commission daily.</p>
+      <button class="btn-p" style="margin-top:4px" onclick="showToast('📋','Referral Link Copied!')">Copy Invite Link</button>
+    </div>
+  </div>
+
+  <!-- ACCOUNT TAB -->
+  <div id="tabAcc" class="hide" style="padding:4px 0">
+    <div class="sec-card" style="display:flex;align-items:center;gap:12px">
+      <div style="width:50px;height:50px;background:#38bdf8;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:24px">👤</div>
+      <div>
+        <div id="accPhone" style="font-weight:900;font-size:15px">Member</div>
+        <div style="font-size:11px;color:#fbbf24">VIP 4 Member</div>
+      </div>
+    </div>
+
+    <div class="sec-card">
+      <div style="font-size:12px;color:#9aa8cf">Total balance</div>
+      <div style="font-size:22px;font-weight:900;margin:4px 0" id="accBal">₹ 1,270.00</div>
+      <div style="display:flex;gap:8px;margin-top:12px">
+        <button class="btn-p" style="margin:0;background:#10b981" onclick="showToast('💰','Deposit page')">Deposit</button>
+        <button class="btn-p" style="margin:0;background:#f43f5e" onclick="showToast('💸','Withdrawal page')">Withdraw</button>
+      </div>
+    </div>
+
+    <div class="list-row" onclick="showToast('📊','Opening Game History')"><span>📊 Game History</span><span>›</span></div>
+    <div class="list-row" onclick="showToast('🎁','Opening Gifts & Coupons')"><span>🎁 Gifts & Coupons</span><span>›</span></div>
+    <div class="list-row" onclick="showToast('🌐','Language: English')"><span>🌐 Language</span><span>English ›</span></div>
+    <div class="list-row" onclick="showToast('🎧','Connecting to Customer Support')"><span>🎧 Customer Service</span><span>›</span></div>
+    
+    <div style="margin:16px 12px">
+      <button class="btn-p" style="background:#ef4444" onclick="doLogout()">Log Out</button>
+    </div>
+  </div>
+
+  <!-- BOTTOM NAVIGATION -->
+  <div class="bnav">
+    <div class="bi act" id="navHome" onclick="goTab('home')">🏠<br>Home</div>
+    <div class="bi" id="navAct" onclick="goTab('activity')">🎁<br>Activity</div>
+    <div class="bi" id="navPromo" onclick="goTab('promo')">🤝<br>Promotion</div>
+    <div class="bi" id="navAcc" onclick="goTab('acc')">👤<br>Account</div>
+  </div>
+</div>
+
+</div>
+
+<script>
+var authMode = 'log', bal = 1270;
+
+function showToast(ico, msg){
+  var b = document.getElementById("toastBox");
+  document.getElementById("toastIco").innerText = ico;
+  document.getElementById("toastTxt").innerText = msg;
+  b.classList.remove("hide");
+  setTimeout(function(){ b.classList.add("hide"); }, 2500);
+}
+
+function setAuthMode(m){
+  authMode = m;
+  document.getElementById("tabL").className = m=='log' ? "atab act" : "atab";
+  document.getElementById("tabR").className = m=='reg' ? "atab act" : "atab";
+  document.getElementById("btnAuthAction").innerText = m=='log' ? "Log In" : "Register Now";
+}
+
+function handleAuth(){
+  var ph = document.getElementById("inPh").value.trim();
+  var pw = document.getElementById("inPw").value.trim();
+  if(ph.length !== 10){ showToast("⚠️","Enter 10-digit mobile number"); return; }
+  if(pw.length < 4){ showToast("⚠️","Enter valid password"); return; }
+
+  var users = JSON.parse(localStorage.getItem("starwinn_users") || "{}");
+  if(authMode == 'reg'){
+    if(users[ph]){ showToast("❌","Already registered! Please Login."); setAuthMode('log'); return; }
+    users[ph] = pw;
+    localStorage.setItem("starwinn_users", JSON.stringify(users));
+    showToast("🎉","Registration Successful!");
+  } else {
+    if(!users[ph] && ph !== "9568128903"){ showToast("❌","Number not registered! Please Register."); setAuthMode('reg'); return; }
+    showToast("✅","Login Successful!");
+  }
+
+  document.getElementById("pgAuth").classList.add("hide");
+  document.getElementById("pgMain").classList.remove("hide");
+  document.getElementById("accPhone").innerText = "+91 " + ph;
+}
+
+function doLogout(){
+  document.getElementById("pgMain").classList.add("hide");
+  document.getElementById("pgAuth").classList.remove("hide");
+  document.getElementById("inPw").value = "";
+  showToast("🚪","Logged out successfully");
+}
+
+function goTab(t){
+  ["tabHome","tabActivity","tabPromo","tabAcc"].forEach(function(id){ document.getElementById(id).classList.add("hide"); });
+  ["navHome","navAct","navPromo","navAcc"].forEach(function(id){ document.getElementById(id).className = "bi"; });
+
+  if(t=='home'){ document.getElementById("tabHome").classList.remove("hide"); document.getElementById("navHome").className = "bi act"; }
+  if(t=='activity'){ document.getElementById("tabActivity").classList.remove("hide"); document.getElementById("navAct").className = "bi act"; }
+  if(t=='promo'){ document.getElementById("tabPromo").classList.remove("hide"); document.getElementById("navPromo").className = "bi act"; }
+  if(t=='acc'){ document.getElementById("tabAcc").classList.remove("hide"); document.getElementById("navAcc").className = "bi act"; }
+}
+</script>
+</body>
+</html>
