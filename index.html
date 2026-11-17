@@ -3725,7 +3725,437 @@
     }
     overlay.classList.remove('hidden');
   }
-</script>   }
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>StarWinn - Official Gaming & Lottery Portal</title>
+  <!-- Load Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Load Google Font Inter -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    /* Global styling & mobile-first dark navy theme matching Tiranga UI */
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+
+    input, select, textarea {
+      user-select: text !important;
+      -webkit-user-select: text !important;
+    }
+
+    body {
+      background-color: #070b19;
+      color: #ffffff;
+      margin: 0;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .app-container {
+      width: 100%;
+      max-width: 440px;
+      min-height: 100vh;
+      background-color: #131b3a;
+      position: relative;
+      overflow-x: hidden;
+      padding-bottom: 92px;
+      box-shadow: 0 0 40px rgba(0, 0, 0, 0.85);
+    }
+
+    ::-webkit-scrollbar {
+      width: 3px;
+      height: 3px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334175;
+      border-radius: 4px;
+    }
+
+    /* Stylish Italic Brand Logo */
+    .brand-logo {
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #ffffff 10%, #38bdf8 55%, #fbbf24 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    /* 3D Glossy Tiranga WinGo Number Ball Styles */
+    .wingo-ball {
+      width: 46px;
+      height: 46px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 18px;
+      font-weight: 900;
+      cursor: pointer;
+      position: relative;
+      box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.45), inset 0 4px 6px rgba(255, 255, 255, 0.55), 0 4px 8px rgba(0, 0, 0, 0.4);
+      transition: transform 0.12s ease, box-shadow 0.12s ease;
+    }
+    .wingo-ball::after {
+      content: attr(data-num);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ffffff 0%, #e2e8f0 85%, #cbd5e1 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.25);
+    }
+    .wingo-ball:active {
+      transform: scale(0.9);
+    }
+    .ball-green {
+      background: linear-gradient(180deg, #34d399 0%, #059669 100%);
+      color: #059669;
+    }
+    .ball-red {
+      background: linear-gradient(180deg, #fb7185 0%, #e11d48 100%);
+      color: #e11d48;
+    }
+    .ball-zero {
+      background: linear-gradient(135deg, #fb7185 50%, #a855f7 50%);
+      color: #9333ea;
+    }
+    .ball-five {
+      background: linear-gradient(135deg, #34d399 50%, #a855f7 50%);
+      color: #059669;
+    }
+
+    /* Mini recent winning balls inside ticket card */
+    .mini-ball {
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: 900;
+      box-shadow: inset 0 -2px 3px rgba(0,0,0,0.4), 0 2px 4px rgba(0,0,0,0.3);
+    }
+    .mini-ball span {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background: #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Ticket Card Notches & Dashed Divider */
+    .ticket-card {
+      position: relative;
+      background: linear-gradient(135deg, #3b82f6 0%, #2563eb 55%, #1d4ed8 100%);
+    }
+    .ticket-notch-top, .ticket-notch-bottom {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 16px;
+      height: 8px;
+      background-color: #131b3a;
+      z-index: 5;
+    }
+    .ticket-notch-top {
+      top: 0;
+      border-bottom-left-radius: 10px;
+      border-bottom-right-radius: 10px;
+    }
+    .ticket-notch-bottom {
+      bottom: 0;
+      border-top-left-radius: 10px;
+      border-top-right-radius: 10px;
+    }
+
+    /* Custom Range Slider for Security Captcha */
+    input[type="range"].captcha-slider {
+      -webkit-appearance: none;
+      width: 100%;
+      height: 44px;
+      background: #0b1021;
+      border: 1px solid #35447a;
+      border-radius: 22px;
+      outline: none;
+      padding: 0 4px;
+    }
+    input[type="range"].captcha-slider::-webkit-slider-thumb {
+      -webkit-appearance: none;
+      appearance: none;
+      width: 38px;
+      height: 38px;
+      border-radius: 50%;
+      background: linear-gradient(135deg, #38bdf8, #2563eb);
+      cursor: pointer;
+      box-shadow: 0 0 14px rgba(56, 189, 248, 0.75);
+    }
+
+    /* Spin Wheel Animation */
+    @keyframes slowSpin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+    .spin-badge-ring {
+      animation: slowSpin 12s linear infinite;
+    }
+
+    /* Tiranga Win/Loss Curled Ticket Receipt Effect */
+    .ticket-receipt-paper {
+      background: linear-gradient(180deg, #e2e8f0 0%, #ffffff 16%, #ffffff 88%, #f1f5f9 100%);
+      box-shadow: 0 10px 18px -6px rgba(0, 0, 0, 0.35), inset 0 6px 8px -4px rgba(0, 0, 0, 0.18);
+      clip-path: polygon(3% 0%, 97% 0%, 100% 100%, 0% 100%);
+    }
+
+    /* Spribe Aviator Sunburst Canvas Background */
+    .aviator-sunburst {
+      background: repeating-conic-gradient(
+        from 0deg at 0% 100%,
+        #111318 0deg 10deg,
+        #191c24 10deg 20deg
+      );
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container" id="appRoot">
+
+    <!-- REALISTIC 2-SECOND LOADING OVERLAY -->
+    <div id="globalLoader" class="hidden fixed inset-0 z-[130] bg-[#070b19]/85 backdrop-blur-xs flex flex-col items-center justify-center">
+      <div class="w-16 h-16 rounded-2xl bg-[#1e274f] border border-sky-400/50 flex flex-col items-center justify-center shadow-2xl">
+        <div class="w-8 h-8 border-4 border-sky-400 border-t-transparent rounded-full animate-spin"></div>
+      </div>
+      <div id="loaderLabel" class="text-xs font-extrabold text-sky-300 mt-3 tracking-wide">Loading...</div>
+    </div>
+
+    <!-- TOAST NOTIFICATION POPUP -->
+    <div id="toastBox" class="hidden fixed top-5 left-1/2 -translate-x-1/2 z-[120] bg-[#0b1021]/95 border border-sky-400 text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-2.5 max-w-[90%] text-xs font-bold">
+      <span id="toastIco" class="text-base">✅</span>
+      <span id="toastTxt">Notification</span>
+    </div>
+
+    <!-- ==========================================
+         1. AUTHENTICATION SCREEN (LOGIN / REGISTER)
+         ========================================== -->
+    <div id="pgAuth" class="min-h-screen bg-gradient-to-b from-[#1e274f] to-[#0b1021] p-5 flex flex-col justify-between z-40 relative">
+      <div>
+        <div class="text-center mt-8 mb-6">
+          <div class="inline-flex items-center gap-2 justify-center">
+            <span class="bg-gradient-to-br from-amber-400 to-orange-500 text-black font-black text-sm px-2 py-0.5 rounded-md shadow">★</span>
+            <span class="brand-logo text-4xl">StarWinn</span>
+          </div>
+          <p class="text-xs text-slate-300 mt-1.5 font-medium">Official Licensed Gaming & Lottery Portal</p>
+        </div>
+
+        <div class="flex border-b border-[#2f3c73] mb-6">
+          <button type="button" id="tabL" onclick="setAuthMode('log')" class="flex-1 py-3 text-center font-extrabold text-sm text-sky-400 border-b-2 border-sky-400 transition">
+            📱 Log in with phone
+          </button>
+          <button type="button" id="tabR" onclick="setAuthMode('reg')" class="flex-1 py-3 text-center font-bold text-sm text-slate-400 border-b-2 border-transparent transition">
+            📝 Register Account
+          </button>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-xs font-bold text-slate-300 mb-1.5">📱 Phone number</label>
+          <div class="flex items-center bg-[#0b1021] border border-[#35447a] rounded-xl px-3.5 focus-within:border-sky-400 transition">
+            <span class="text-slate-300 font-extrabold text-sm pr-2.5 border-r border-[#2d3b6e]">+91 ▾</span>
+            <input type="tel" id="inPh" maxlength="10" value="9568128903" placeholder="Enter 10-digit mobile number" class="flex-1 bg-transparent text-white py-3.5 px-3 text-sm font-semibold outline-none">
+          </div>
+        </div>
+
+        <div class="mb-4">
+          <label class="block text-xs font-bold text-slate-300 mb-1.5">🔒 Password</label>
+          <div class="flex items-center bg-[#0b1021] border border-[#35447a] rounded-xl px-3.5 focus-within:border-sky-400 transition">
+            <input type="password" id="inPw" value="123456" placeholder="Enter password (min 4 chars)" class="flex-1 bg-transparent text-white py-3.5 text-sm font-semibold outline-none">
+            <button type="button" onclick="togglePwVisibility()" class="text-slate-400 text-sm px-1">👁️</button>
+          </div>
+        </div>
+
+        <div id="inviteCodeWrap" class="hidden mb-4">
+          <label class="block text-xs font-bold text-slate-300 mb-1.5">🎁 Invite Code (Optional)</label>
+          <div class="flex items-center bg-[#0b1021] border border-[#35447a] rounded-xl px-3.5">
+            <input type="text" id="inInvite" value="STAR8849" placeholder="Enter referral invite code" class="flex-1 bg-transparent text-white py-3.5 text-sm font-semibold outline-none">
+          </div>
+        </div>
+
+        <!-- DIRECT WORKING LOGIN BUTTON -->
+        <button type="button" id="btnAuthSubmit" onclick="initiateAuth()" class="w-full py-3.5 mt-3 rounded-full bg-gradient-to-r from-[#38bdf8] to-[#2563eb] text-white font-extrabold text-base shadow-lg shadow-blue-600/30 active:scale-95 transition">
+          Log In ➔
+        </button>
+
+        <button type="button" onclick="quickDemoLogin()" class="w-full py-2.5 mt-3 rounded-full bg-[#242e5c] border border-[#3a498a] text-sky-300 font-bold text-xs active:scale-95 transition">
+          ⚡ Instant Demo Login (Skip Typing)
+        </button>
+      </div>
+
+      <div class="flex justify-around items-center pt-6 border-t border-[#283363] text-xs text-slate-300">
+        <button type="button" onclick="showToast('🔑', 'Enter your registered number & click Register to reset password.')" class="flex flex-col items-center gap-1">
+          <span class="text-lg">🔐</span>
+          <span>Forgot Password</span>
+        </button>
+        <button type="button" onclick="openSelfServicePortal()" class="flex flex-col items-center gap-1">
+          <span class="text-lg">🎧</span>
+          <span>24/7 Customer Service</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- ==========================================
+         2. MAIN PORTAL (HOME, ACTIVITY, PROMOTION, ACCOUNT)
+         ========================================== -->
+    <div id="pgMain" class="hidden">
+
+      <header class="sticky top-0 z-30 bg-[#182042]/95 backdrop-blur-md border-b border-[#2d3a70] px-4 py-3 flex justify-between items-center">
+        <div class="flex items-center gap-2">
+          <span class="bg-gradient-to-br from-amber-400 to-orange-500 text-black font-black text-xs px-1.5 py-0.5 rounded">★</span>
+          <span class="brand-logo text-2xl">StarWinn</span>
+        </div>
+        <div class="flex items-center gap-2">
+          <div class="bg-[#252f5c] border border-[#3c4b8c] px-3 py-1.5 rounded-full flex items-center gap-1.5">
+            <span class="text-amber-400 font-black text-xs" id="hdrBalance">₹51.00</span>
+            <button type="button" onclick="refreshBalanceAnim()" class="text-xs text-sky-300 active:rotate-180 transition-transform">🔄</button>
+          </div>
+          <button type="button" onclick="switchMainTab('activity')" class="relative bg-[#252f5c] p-2 rounded-full text-xs">
+            🔔
+            <span class="absolute -top-0.5 -right-0.5 w-2 h-2 bg-rose-500 rounded-full"></span>
+          </button>
+        </div>
+      </header>
+
+      <section id="tabHome" class="p-3.5 space-y-3.5">
+        <div class="bg-gradient-to-r from-[#1d4ed8] via-[#2563eb] to-[#0284c7] rounded-2xl p-4 border border-sky-400/40 shadow-lg relative overflow-hidden">
+          <div class="relative z-10">
+            <span class="bg-amber-400 text-black text-[10px] font-black px-2.5 py-0.5 rounded-full uppercase">Official Portal</span>
+            <h2 class="text-lg font-black mt-1.5 leading-snug">Play WinGo, Aviator, Mines, Chicken Road 2 & Live Casino!</h2>
+            <p class="text-xs text-sky-100 mt-1">Claim ₹51 Welcome Bonus & Daily Rewards.</p>
+          </div>
+          <div class="absolute -right-4 -bottom-4 text-7xl opacity-20">🏆</div>
+        </div>
+
+        <div class="flex items-center gap-2 overflow-x-auto pb-1.5 pt-0.5" id="homeCatBar">
+          <button type="button" onclick="selectHomeCategory('popular', this)" class="cat-pill shrink-0 w-20 py-2 rounded-xl bg-gradient-to-b from-[#38bdf8] to-[#2563eb] text-white flex flex-col items-center gap-1 shadow-md">
+            <span class="text-xl">🏆</span>
+            <span class="text-[11px] font-extrabold">Popular</span>
+          </button>
+          <button type="button" onclick="selectHomeCategory('lottery', this)" class="cat-pill shrink-0 w-20 py-2 rounded-xl bg-[#232c59] border border-[#354382] text-slate-300 flex flex-col items-center gap-1">
+            <span class="text-xl">🎟️</span>
+            <span class="text-[11px] font-bold">Lottery</span>
+          </button>
+          <button type="button" onclick="selectHomeCategory('casino', this)" class="cat-pill shrink-0 w-20 py-2 rounded-xl bg-[#232c59] border border-[#354382] text-slate-300 flex flex-col items-center gap-1">
+            <span class="text-xl">💃</span>
+            <span class="text-[11px] font-bold">Casino</span>
+          </button>
+          <button type="button" onclick="selectHomeCategory('slots', this)" class="cat-pill shrink-0 w-20 py-2 rounded-xl bg-[#232c59] border border-[#354382] text-slate-300 flex flex-col items-center gap-1">
+            <span class="text-xl">🎰</span>
+            <span class="text-[11px] font-bold">Slots</span>
+          </button>
+        </div>
+
+        <div id="homeCategoryContent" class="space-y-4"></div>
+      </section>
+
+      <!-- ACTIVITY TAB -->
+      <section id="tabActivity" class="hidden pb-6 p-3.5">
+        <div class="bg-gradient-to-b from-[#25326b] to-[#131b3a] pt-4 pb-5 px-4 text-center rounded-2xl border border-[#2e3c7a]">
+          <div class="brand-logo text-2xl mb-3">StarWinn</div>
+          <div class="text-xs text-slate-300 font-medium">Today's bonus</div>
+          <div class="text-xl font-black text-white mt-0.5">₹0.00</div>
+        </div>
+      </section>
+
+      <!-- PROMOTION TAB -->
+      <section id="tabPromo" class="hidden pb-6 p-3.5">
+        <div class="bg-[#18224a] p-4 rounded-2xl text-center">
+          <h2 class="text-base font-extrabold text-white mb-2">Agency Promotion</h2>
+          <button type="button" onclick="copyInviteLink()" class="w-full py-3 rounded-full bg-gradient-to-r from-[#38bdf8] to-[#2563eb] text-white font-extrabold text-sm">
+            Copy Invitation Link
+          </button>
+        </div>
+      </section>
+
+      <!-- ACCOUNT TAB -->
+      <section id="tabAcc" class="hidden pb-6">
+        <div class="bg-gradient-to-b from-[#283675] to-[#131b3a] pt-5 pb-12 px-4">
+          <div class="flex items-center gap-3.5">
+            <div class="w-16 h-16 rounded-full bg-gradient-to-tr from-sky-400 to-indigo-500 p-0.5 shadow-lg shrink-0">
+              <div class="w-full h-full rounded-full bg-[#182042] flex items-center justify-center text-3xl">😎</div>
+            </div>
+            <div class="flex-1 min-w-0">
+              <div class="flex items-center gap-2">
+                <span class="font-black text-base tracking-wide truncate" id="accMemberName">MEMBERNNGC26K5</span>
+                <span class="bg-gradient-to-r from-amber-300 to-amber-500 text-black text-[10px] font-black px-2 py-0.5 rounded-full shrink-0">👑 VIP1</span>
+              </div>
+              <div class="inline-flex items-center gap-2 bg-amber-500 text-white text-xs font-extrabold px-3 py-0.5 rounded-full mt-1.5">
+                <span>UID | 15450611</span>
+                <button type="button" onclick="copyText('15450611', 'UID Copied!')" class="text-[11px]">📋</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="mx-3.5 -mt-8 bg-[#252f5c] border border-[#3a498a] rounded-2xl p-4 shadow-xl">
+          <div class="flex justify-between items-center">
+            <div>
+              <div class="text-xs text-slate-300 font-medium">Total balance</div>
+              <div class="flex items-center gap-2 mt-0.5">
+                <span class="text-2xl font-black text-white" id="accBalanceDisplay">₹51.00</span>
+                <button type="button" onclick="refreshBalanceAnim()" class="text-sm text-slate-300">🔄</button>
+              </div>
+            </div>
+            <button type="button" onclick="openDepositModal()" class="bg-gradient-to-r from-[#38bdf8] to-[#2563eb] text-white text-xs font-extrabold px-4 py-2 rounded-full shadow">
+              Enter wallet
+            </button>
+          </div>
+
+          <div class="grid grid-cols-4 gap-2 mt-5 text-center">
+            <button type="button" onclick="openDepositModal()" class="flex flex-col items-center gap-1.5 active:scale-90 transition">
+              <div class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-xl">💰</div>
+              <span class="text-xs font-bold text-slate-200">Deposit</span>
+            </button>
+            <button type="button" onclick="openWithdrawModal()" class="flex flex-col items-center gap-1.5 active:scale-90 transition">
+              <div class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center text-xl">💳</div>
+              <span class="text-xs font-bold text-slate-200">Withdraw</span>
+            </button>
+            <button type="button" onclick="openSelfServicePortal()" class="flex flex-col items-center gap-1.5 active:scale-90 transition">
+              <div class="w-10 h-10 rounded-xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-xl">🛠️</div>
+              <span class="text-xs font-bold text-slate-200">Support</span>
+            </button>
+            <button type="button" onclick="openVipCenter()" class="flex flex-col items-center gap-1.5 active:scale-90 transition">
+              <div class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center text-xl">💎</div>
+              <span class="text-xs font-bold text-slate-200">VIP</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="mx-3.5 mt-5">
+          <button type="button" onclick="doLogout()" class="w-full py-3 rounded-full border border-sky-400 text-sky-400 font-extrabold text-sm flex items-center justify-center gap-2">
+            <span>⏻</span> Log out
+          </button>
+        </div>
+      </section>
+
+      <!-- BOTTOM NAVIGATION BAR -->
+      <nav class="fixed bottom-0 w-full max-w-[440px] bg-[#141a36] border-t border-[#2c386e] px-2 py-2 flex items-end justify-around z-30">
+        <button type="button" id="navHome" onclick="switchMainTab('home')" class="flex-1 flex flex-col items-center gap-0.5 text-sky-400 font-extrabold text-[11px]">
+          <span class="text-lg">🏠</span><span>Home</span>
+        </button>
+        <button type="button" id="navAct" onclick="switchMainTab('activity')" class="flex-1 flex flex-col items-center gap-0.5 text-slate-400 font-semibold text-[11px]">
+             
   </script>
 </body>
 </html>
