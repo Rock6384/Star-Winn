@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Starwinn - Tiranga Edition</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            /* Tiranga Background Gradient */
+            background: linear-gradient(135deg, #FF9933 0%, #FFFFFF 50%, #138808 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
+        }
+
+        /* App / Website Container */
+        .app-container {
+            background: #ffffff;
+            width: 100%;
+            max-width: 420px;
+            border-radius: 20px;
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            border-top: 6px solid #FF9933;
+            border-bottom: 6px solid #138808;
+        }
+
+        /* Header Section */
+        .app-header {
+            background: #000080; /* Ashok Chakra Navy Blue */
+            color: white;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+        }
+
+        .app-header h2 {
+            font-size: 22px;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+        }
+
+        .app-header p {
+            font-size: 12px;
+            color: #ff9933;
+            font-weight: bold;
+        }
+
+        /* Tiranga Stripe Line Below Header */
+        .tiranga-line {
+            display: flex;
+            height: 4px;
+            width: 100%;
+        }
+        .saffron-bar { background-color: #FF9933; flex: 1; }
+        .white-bar { background-color: #FFFFFF; flex: 1; border-top: 1px solid #ddd; border-bottom: 1px solid #ddd; }
+        .green-bar { background-color: #138808; flex: 1; }
+
+        /* Content Body Area */
+        .app-body {
+            padding: 20px;
+            background: #f9f9f9;
+            flex: 1;
+        }
+
+        .welcome-card {
+            background: white;
+            padding: 15px;
+            border-radius: 12px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+            border-left: 5px solid #FF9933;
+        }
+
+        .welcome-card h3 {
+            font-size: 16px;
+            color: #333;
+            margin-bottom: 5px;
+        }
+
+        .welcome-card p {
+            font-size: 13px;
+            color: #666;
+        }
+
+        /* Action Buttons Grid / List */
+        .menu-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .menu-item {
+            background: white;
+            padding: 14px 16px;
+            border-radius: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            text-decoration: none;
+            color: #333;
+            font-weight: 600;
+            font-size: 14px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            transition: 0.3s;
+            border: 1px solid #eee;
+        }
+
+        .menu-item:hover {
+            background: #fff5eb;
+            border-color: #FF9933;
+            transform: translateX(3px);
+        }
+
+        .menu-item span {
+            color: #000080;
+            font-size: 16px;
+        }
+
+        /* Footer Action Button */
+        .app-footer {
+            padding: 20px;
+            background: white;
+            text-align: center;
+        }
+
+        .btn-main {
+            display: block;
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(135deg, #FF9933 0%, #138808 100%);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transition: 0.3s;
+        }
+
+        .btn-main:hover {
+            opacity: 0.9;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+
+    <div class="app-container">
+        <!-- Header -->
+        <div class="app-header">
+            <h2>STARWINN</h2>
+            <p>TIRANGA EDITION HUB</p>
+        </div>
+
+        <!-- Tiranga Stripe -->
+        <div class="tiranga-line">
+            <div class="saffron-bar"></div>
+            <div class="white-bar"></div>
+            <div class="green-bar"></div>
+        </div>
+
+        <!-- Body Content -->
+        <div class="app-body">
+            <div class="welcome-card">
+                <h3>Welcome, Gamer!</h3>
+                <p>Explore your dashboard, check features, and start playing your demo project.</p>
+            </div>
+
+            <div class="menu-grid">
+                <a href="#" class="menu-item">
+                    🎮 Play Demo Game <span>&rarr;</span>
+                </a>
+                <a href="#" class="menu-item">
+                    👤 Profile & Stats <span>&rarr;</span>
+                </a>
+                <a href="#" class="menu-item">
+                    ⚙️ Settings & Audio <span>&rarr;</span>
+                </a>
+                <a href="#" class="menu-item">
+                    ℹ️ About Starwinn <span>&rarr;</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Footer Button -->
+        <div class="app-footer">
+            <a href="#" class="btn-main">Launch Now</a>
+        </div>
+    </div>
+
+</body>
+  </html>
