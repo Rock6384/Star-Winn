@@ -4384,5 +4384,231 @@
       document.getElementById('modalOverlay').classList.add('hidden');
     }
   </script>
-</body>
+<!-- ADMIN PANEL BUTTON -->
+<button type="button" onclick="openAdminPanel()" class="fixed bottom-40 right-4 z-30 bg-amber-400 text-black font-black text-xs px-3 py-2 rounded-full shadow-xl border border-amber-200 active:scale-95">
+  🛠️ Admin
+</button>
+
+<!-- ADMIN PANEL MODAL -->
+<div id="pgAdminPanel" class="hidden fixed inset-0 z-[90] bg-[#070b19]/95 flex justify-center overflow-y-auto p-3.5">
+  <div class="w-full max-w-[440px] bg-[#131b3a] border border-sky-400/40 rounded-3xl p-4 h-fit my-auto space-y-4 shadow-2xl">
+
+    <!-- Header -->
+    <div class="flex justify-between items-center border-b border-[#2c3a73] pb-3">
+      <div>
+        <h2 class="text-base font-black text-amber-400">🛠️ StarWinn Admin Panel</h2>
+        <p class="text-[10px] text-slate-400">Search by UID or Registered Mobile Number</p>
+      </div>
+      <button type="button" onclick="closeAdminPanel()" class="bg-rose-600 text-white text-xs font-extrabold px-3 py-1.5 rounded-lg">✕ Close</button>
+    </div>
+
+    <!-- Search Box (UID or Mobile) -->
+    <div class="space-y-2">
+      <label class="block text-xs font-bold text-slate-300">🔍 UID या Mobile Number डालें</label>
+      <div class="flex gap-2">
+        <input type="text" id="adminSearchInput" placeholder="e.g. 15450611 या 9568128903" class="flex-1 bg-[#0b1021] border border-[#35447a] rounded-xl px-3 py-2.5 text-xs text-white font-bold outline-none focus:border-sky-400">
+        <button type="button" onclick="searchUserInAdmin()" class="bg-sky-500 hover:bg-sky-400 text-white font-extrabold text-xs px-4 rounded-xl active:scale-95">
+          Search
+        </button>
+      </div>
+    </div>
+
+    <!-- Registered Users List -->
+    <div>
+      <div class="text-[11px] font-bold text-slate-400 mb-1.5">Registered Users (Click to Select):</div>
+      <div id="adminUsersList" class="max-h-28 overflow-y-auto space-y-1.5 text-xs"></div>
+    </div>
+
+    <!-- Selected User Editor -->
+    <div id="adminSelectedUserBox" class="hidden bg-[#1c2754] border border-[#35468c] rounded-2xl p-3.5 space-y-3 text-xs">
+      <div class="flex justify-between items-start border-b border-[#2e3f82] pb-2">
+        <div>
+          <div class="font-black text-sm text-white" id="admUserName">MEMBER</div>
+          <div class="text-[11px] text-sky-300 font-mono" id="admUserMeta">UID: - | Mobile: -</div>
+        </div>
+        <span class="bg-amber-400 text-black font-black text-[11px] px-2.5 py-1 rounded-full" id="admUserBalBadge">₹0.00</span>
+      </div>
+
+      <!-- Balance Edit -->
+      <div class="space-y-1.5">
+        <label class="block font-bold text-slate-300">💰 Balance Edit करें (₹)</label>
+        <div class="flex gap-1.5">
+          <input type="number" id="adminAmtInput" placeholder="Amount" class="w-28 bg-[#0b1021] border border-[#35447a] rounded-xl px-2.5 py-2 text-white font-black outline-none">
+          <button type="button" onclick="adminModifyBalance('add')" class="flex-1 bg-emerald-600 text-white font-extrabold py-2 rounded-xl active:scale-95">+ Add</button>
+          <button type="button" onclick="adminModifyBalance('sub')" class="flex-1 bg-rose-600 text-white font-extrabold py-2 rounded-xl active:scale-95">- Deduct</button>
+          <button type="button" onclick="adminModifyBalance('set')" class="bg-amber-500 text-black font-extrabold px-2.5 py-2 rounded-xl active:scale-95">Set</button>
+        </div>
+      </div>
+
+      <!-- Deposit & Withdraw Status Control -->
+      <div class="grid grid-cols-2 gap-2 pt-1">
+        <div class="bg-[#131b3a] p-2.5 rounded-xl space-y-1.5">
+          <div class="font-extrabold text-emerald-400">Deposit Status</div>
+          <div id="admDepStatus" class="text-[11px] text-slate-300">No Deposit</div>
+          <div class="flex gap-1">
+            <button type="button" onclick="adminUpdateTxStatus('deposit', 'Approved')" class="flex-1 bg-emerald-600/80 text-white text-[10px] font-bold py-1 rounded">Approve</button>
+            <button type="button" onclick="adminUpdateTxStatus('deposit', 'Rejected')" class="flex-1 bg-rose-600/80 text-white text-[10px] font-bold py-1 rounded">Reject</button>
+          </div>
+        </div>
+
+        <div class="bg-[#131b3a] p-2.5 rounded-xl space-y-1.5">
+          <div class="font-extrabold text-amber-400">Withdraw Status</div>
+          <div id="admWthStatus" class="text-[11px] text-slate-300">No Withdraw</div>
+          <div class="flex gap-1">
+            <button type="button" onclick="adminUpdateTxStatus('withdraw', 'Approved')" class="flex-1 bg-emerald-600/80 text-white text-[10px] font-bold py-1 rounded">Approve</button>
+            <button type="button" onclick="adminUpdateTxStatus('withdraw', 'Rejected')" class="flex-1 bg-rose-600/80 text-white text-[10px] font-bold py-1 rounded">Reject</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<script>
+  let adminUsersDB = JSON.parse(localStorage.getItem('star_admin_users_db') || 'null');
+  if (!adminUsersDB) {
+    adminUsersDB = [
+      {
+        uid: '15450611',
+        phone: '9568128903',
+        name: 'MEMBER128903',
+        balance: typeof walletBalance !== 'undefined' ? walletBalance : 51.00,
+        lastDeposit: { amount: 500, status: 'Pending' },
+        lastWithdraw: { amount: 200, status: 'Pending' }
+      }
+    ];
+    localStorage.setItem('star_admin_users_db', JSON.stringify(adminUsersDB));
+  }
+
+  let currentAdminSelectedUid = null;
+
+  function syncCurrentUserToAdminDB(phone, customUid) {
+    if (!phone) return;
+    let existing = adminUsersDB.find(u => u.phone === phone);
+    if (!existing) {
+      const uid = customUid || String(Math.floor(10000000 + Math.random() * 89999999));
+      existing = {
+        uid: uid,
+        phone: phone,
+        name: 'MEMBER' + phone.slice(-6),
+        balance: typeof walletBalance !== 'undefined' ? walletBalance : 51.00,
+        lastDeposit: { amount: 0, status: 'None' },
+        lastWithdraw: { amount: 0, status: 'None' }
+      };
+      adminUsersDB.unshift(existing);
+      localStorage.setItem('star_admin_users_db', JSON.stringify(adminUsersDB));
+    }
+    return existing;
+  }
+
+  function openAdminPanel() {
+    const activePhone = localStorage.getItem('star_session_user') || '9568128903';
+    const curUser = syncCurrentUserToAdminDB(activePhone, '15450611');
+    if (curUser && typeof walletBalance !== 'undefined') {
+      curUser.balance = walletBalance;
+      localStorage.setItem('star_admin_users_db', JSON.stringify(adminUsersDB));
+    }
+    document.getElementById('pgAdminPanel')?.classList.remove('hidden');
+    renderAdminUsersList(adminUsersDB);
+    if (curUser) selectAdminUser(curUser.uid);
+  }
+
+  function closeAdminPanel() {
+    document.getElementById('pgAdminPanel')?.classList.add('hidden');
+  }
+
+  function renderAdminUsersList(list) {
+    const box = document.getElementById('adminUsersList');
+    if (!box) return;
+    if (!list.length) {
+      box.innerHTML = `<div class="text-slate-400 text-center py-2">कोई यूज़र नहीं मिला</div>`;
+      return;
+    }
+    box.innerHTML = list.map(u => `
+      <div onclick="selectAdminUser('${u.uid}')" class="bg-[#1c2754] hover:bg-[#25346e] border border-[#2f3f80] rounded-xl px-3 py-2 flex justify-between items-center cursor-pointer">
+        <div>
+          <span class="font-black text-sky-300">UID: ${u.uid}</span>
+          <span class="text-slate-300 ml-2">📱 ${u.phone}</span>
+        </div>
+        <span class="font-black text-amber-400">₹${Number(u.balance).toFixed(2)}</span>
+      </div>
+    `).join('');
+  }
+
+  function searchUserInAdmin() {
+    const q = (document.getElementById('adminSearchInput')?.value || '').trim().toLowerCase();
+    if (!q) {
+      renderAdminUsersList(adminUsersDB);
+      return;
+    }
+    const matches = adminUsersDB.filter(u =>
+      u.uid.toLowerCase().includes(q) || u.phone.toLowerCase().includes(q)
+    );
+    renderAdminUsersList(matches);
+    if (matches.length === 1) {
+      selectAdminUser(matches[0].uid);
+    } else if (matches.length === 0 && typeof showToast === 'function') {
+      showToast('⚠️', 'इस UID या मोबाइल नंबर से कोई यूज़र नहीं मिला');
+    }
+  }
+
+  function selectAdminUser(uid) {
+    const user = adminUsersDB.find(u => u.uid === uid);
+    if (!user) return;
+    currentAdminSelectedUid = uid;
+    document.getElementById('adminSelectedUserBox')?.classList.remove('hidden');
+    document.getElementById('admUserName').innerText = user.name;
+    document.getElementById('admUserMeta').innerText = `UID: ${user.uid} | Mobile: ${user.phone}`;
+    document.getElementById('admUserBalBadge').innerText = `₹${Number(user.balance).toFixed(2)}`;
+    document.getElementById('admDepStatus').innerText = user.lastDeposit ? `₹${user.lastDeposit.amount} (${user.lastDeposit.status})` : 'None';
+    document.getElementById('admWthStatus').innerText = user.lastWithdraw ? `₹${user.lastWithdraw.amount} (${user.lastWithdraw.status})` : 'None';
+  }
+
+  function adminModifyBalance(mode) {
+    if (!currentAdminSelectedUid) return;
+    const amt = parseFloat(document.getElementById('adminAmtInput')?.value);
+    if (isNaN(amt) || amt < 0) {
+      if (typeof showToast === 'function') showToast('⚠️', 'सही अमाउंट डालें');
+      return;
+    }
+    const user = adminUsersDB.find(u => u.uid === currentAdminSelectedUid);
+    if (!user) return;
+
+    if (mode === 'add') user.balance = +(Number(user.balance) + amt).toFixed(2);
+    else if (mode === 'sub') user.balance = Math.max(0, +(Number(user.balance) - amt).toFixed(2));
+    else if (mode === 'set') user.balance = +amt.toFixed(2);
+
+    localStorage.setItem('star_admin_users_db', JSON.stringify(adminUsersDB));
+
+    const activePhone = localStorage.getItem('star_session_user');
+    if (activePhone && activePhone === user.phone && typeof walletBalance !== 'undefined') {
+      walletBalance = user.balance;
+      if (typeof updateBalanceDisplays === 'function') updateBalanceDisplays();
+      if (typeof updateBalance === 'function') updateBalance();
+    }
+
+    selectAdminUser(user.uid);
+    renderAdminUsersList(adminUsersDB);
+    if (typeof showToast === 'function') showToast('✅', `UID ${user.uid} का बैलेंस ₹${user.balance.toFixed(2)} अपडेट हुआ`);
+  }
+
+  function adminUpdateTxStatus(type, newStatus) {
+    if (!currentAdminSelectedUid) return;
+    const user = adminUsersDB.find(u => u.uid === currentAdminSelectedUid);
+    if (!user) return;
+
+    if (type === 'deposit') {
+      if (!user.lastDeposit) user.lastDeposit = { amount: 500, status: newStatus };
+      else user.lastDeposit.status = newStatus;
+    } else {
+      if (!user.lastWithdraw) user.lastWithdraw = { amount: 200, status: newStatus };
+      else user.lastWithdraw.status = newStatus;
+    }
+
+    localStorage.setItem('star_admin_users_db', JSON.stringify(adminUsersDB));
+    selectAdminUser(user.uid);
+    if (typeof showToast === 'function') showToast('✅', `${type.toUpperCase()} Status: ${newStatus}`);
+  }
+</script></body>
 </html>
