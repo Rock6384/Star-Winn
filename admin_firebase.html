@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>StarWinn - Admin Control Center</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <style>
+    * {
+      box-sizing: border-box;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    }
+    body {
+      background-color: #070b19;
+      color: #ffffff;
+      margin: 0;
+      min-height: 100vh;
+    }
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #334175;
+      border-radius: 4px;
+    }
+    .brand-logo {
+      font-weight: 900;
+      font-style: italic;
+      letter-spacing: -0.5px;
+      background: linear-gradient(90deg, #ffffff 10%, #38bdf8 55%, #fbbf24 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+  </style>
+</head>
+<body class="p-3 sm:p-5 flex justify-center">
+
+  <!-- TOAST POPUP -->
+  <div id="admToast" class="hidden fixed top-4 left-1/2 -translate-x-1/2 z-50 bg-[#0b1021]/95 border border-sky-400 text-white px-4 py-2.5 rounded-2xl shadow-2xl flex items-center gap-2 text-xs font-bold max-w-[92%]">
+    <span id="admToastIco">✅</span>
+    <span id="admToastTxt">Updated</span>
+  </div>
+
+  <div class="w-full max-w-[520px] bg-[#131b3a] border border-[#2c3a73] rounded-3xl p-4 sm:p-5 space-y-4 shadow-2xl h-fit">
+
+    <!-- HEADER -->
+    <div class="flex flex-wrap justify-between items-center gap-2 border-b border-[#2c3a73] pb-3.5">
+      <div>
+        <div class="flex items-center gap-2">
+          <span class="bg-gradient-to-br from-amber-400 to-orange-500 text-black font-black text-xs px-2 py-0.5 rounded">★</span>
+          <span class="brand-logo text-xl">StarWinn</span>
+          <span class="bg-sky-500/20 border border-sky-400/40 text-sky-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full">ADMIN FILE</span>
+        </div>
+        <p class="text-[11px] text-slate-400 mt-1">UID या Mobile Number से पूरे अकाउंट का एक्सेस और कंट्रोल</p>
+      </div>
+      <div class="flex items-center gap-2">
+        <button type="button" onclick="createNewUserModal()" class="bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-extrabold px-3 py-1.5 rounded-xl active:scale-95 transition">
+          + New User
+        </button>
+        <a href="index.html" class="bg-[#1c2754] hover:bg-[#25346e] border border-[#35468c] text-sky-300 text-xs font-extrabold px-3 py-1.5 rounded-xl">
+          Portal ➔
+        </a>
+      </div>
+    </div>
+
+    <!-- QUICK STATS -->
+    <div class="grid grid-cols-3 gap-2 text-center text-xs">
+      <div class="bg-[#1c2754] border border-[#2e3f82] rounded-2xl p-2.5">
+        <div class="text-slate-400 text-[10px] font-semibold">Total Users</div>
+        <div class="text-base font-black text-white mt-0.5" id="statTotalUsers">0</div>
+      </div>
+      <div class="bg-[#1c2754] border border-[#2e3f82] rounded-2xl p-2.5">
+        <div class="text-slate-400 text-[10px] font-semibold">Blocked Accounts</div>
+        <div class="text-base font-black text-rose-400 mt-0.5" id="statBlockedUsers">0</div>
+      </div>
+      <div class="bg-[#1c2754] border border-[#2e3f82] rounded-2xl p-2.5">
+        <div class="text-slate-400 text-[10px] font-semibold">Total User Balance</div>
+        <div class="text-base font-black text-amber-400 mt-0.5" id="statTotalBal">₹0.00</div>
+      </div>
+    </div>
+
+    <!-- SEARCH BY UID OR MOBILE NUMBER -->
+    <div class="bg-[#18224a] border border-[#2f3f80] rounded-2xl p-3.5 space-y-2">
+      <label class="block text-xs font-extrabold text-sky-300">🔍 UID या Mobile Number डालकर Account Access करें</label>
+      <div class="flex gap-2">
+        <input type="text" id="searchQueryInput" onkeyup="if(event.key==='Enter') searchAccount()" placeholder="UID या 10-digit Mobile Number लिखें..." class="flex-1 bg-[#0b1021] border border-[#35447a] rounded-xl px-3 py-2.5 text-xs text-white font-bold outline-none focus:border-sky-400">
+        <button type="button" onclick="searchAccount()" class="bg-sky-500 hover:bg-sky-400 text-white font-extrabold text-xs px-4 rounded-xl active:scale-95 transition">
+          Access
+        </button>
+        <button type="button" onclick="resetSearch()" class="bg-[#25346e] text-slate-200 font-bold text-xs px-3 rounded-xl">
+          All
+        </button>
+      </div>
+      <div class="text-[10px] text-slate-400">
+        नोट: यदि कोई UID या मोबाइल नंबर अभी सूची में नहीं है, तो आप <strong>+ New User</strong> से तुरंत जोड़कर उसका पूरा अकाउंट मैनेज कर सकते हैं।
+      </div>
+    </div>
+
+    <!-- USERS DIRECTORY LIST -->
+    <div class="space-y-1.5">
+      <div class="flex justify-between items-center text-[11px] font-bold text-slate-400 px-1">
+        <span>Accounts List (Click to Open Full Account Access)</span>
+        <span id="listMatchCount" class="text-sky-400">0 users</span>
+      </div>
+      <div id="usersDirectoryBox" class="max-h-36 overflow-y-auto space-y-1.5 pr-0.5"></div>
+    </div>
+
+    <!-- FULL ACCOUNT ACCESS WORKSPACE -->
+    <div id="accountAccessPanel" class="hidden bg-[#18224a] border border-sky-400/50 rounded-2xl p-4 space-y-4 shadow-xl">
+
+      <!-- Account Profile & Status Header -->
+      <div class="flex flex-wrap justify-between items-start gap-2 border-b border-[#2e3f82] pb-3">
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="text-base font-black text-white" id="accPanelName">MEMBER</span>
+            <span id="accStatusBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-400/40">
+              ACTIVE
+            </span>
+          </div>
+          <div class="text-xs text-sky-300 font-mono mt-1" id="accPanelMeta">UID: - | Mobile: -</div>
+          <div class="text-[11px] text-amber-200 mt-1" id="accPanelIssueDisplay">Issue / Notice: कोई इशू नहीं</div>
+        </div>
+        <div class="text-right">
+          <div class="text-[10px] text-slate-400">Wallet Balance</div>
+          <div class="text-xl font-black text-amber-400" id="accPanelBalance">₹0.00</div>
+        </div>
+      </div>
+
+      <!-- 1. BALANCE & BONUS CONTROLS -->
+      <div class="bg-[#1c2754] border border-[#2f3f80] rounded-2xl p-3 space-y-2.5 text-xs">
+        <div class="font-extrabold text-emerald-400">💰 Balance Add / Deduct / Set & Bonus</div>
+        <div class="flex gap-1.5">
+          <input type="number" id="amountActionInput" placeholder="Amount (₹)" min="0" step="0.01" class="w-28 bg-[#0b1021] border border-[#35447a] rounded-xl px-2.5 py-2 text-white font-black outline-none focus:border-emerald-400">
+          <button type="button" onclick="modifyUserWallet('add')" class="flex-1 bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-2 rounded-xl active:scale-95">
+            + Add Bal
+          </button>
+          <button type="button" onclick="modifyUserWallet('sub')" class="flex-1 bg-rose-600 hover:bg-rose-500 text-white font-extrabold py-2 rounded-xl active:scale-95">
+            - Deduct
+          </button>
+          <button type="button" onclick="modifyUserWallet('set')" class="bg-amber-500 hover:bg-amber-400 text-black font-extrabold px-2.5 py-2 rounded-xl active:scale-95">
+            Set
+          </button>
+        </div>
+        <div class="flex flex-wrap gap-1.5 pt-1">
+          <button type="button" onclick="giveUserBonus(50, 'Welcome Bonus')" class="bg-purple-600/80 hover:bg-purple-600 text-white font-extrabold px-2.5 py-1.5 rounded-xl text-[11px] active:scale-95">
+            🎁 +₹50 Bonus
+          </button>
+          <button type="button" onclick="giveUserBonus(100, 'VIP Bonus')" class="bg-indigo-600/80 hover:bg-indigo-600 text-white font-extrabold px-2.5 py-1.5 rounded-xl text-[11px] active:scale-95">
+            🎁 +₹100 Bonus
+          </button>
+          <button type="button" onclick="giveCustomBonus()" class="bg-amber-400 hover:bg-amber-300 text-black font-extrabold px-3 py-1.5 rounded-xl text-[11px] active:scale-95">
+            🎁 Custom Bonus दें
+          </button>
+        </div>
+      </div>
+
+      <!-- 2. ACCOUNT BLOCK / UNBLOCK & ISSUE ALERT -->
+      <div class="bg-[#1c2754] border border-[#2f3f80] rounded-2xl p-3 space-y-2.5 text-xs">
+        <div class="flex justify-between items-center">
+          <span class="font-extrabold text-sky-300">🛡️ Account Block / Unblock & Issue Show</span>
+          <div class="flex gap-1.5">
+            <button type="button" onclick="setAccountBlockState(true)" class="bg-rose-600 hover:bg-rose-500 text-white font-extrabold px-3 py-1 rounded-lg text-[11px] active:scale-95">
+              🚫 Block Account
+            </button>
+            <button type="button" onclick="setAccountBlockState(false)" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold px-3 py-1 rounded-lg text-[11px] active:scale-95">
+              ✅ Unblock
+            </button>
+          </div>
+        </div>
+
+        <div class="space-y-1.5">
+          <label class="block text-[11px] font-bold text-slate-300">⚠️ यूज़र को दिखाने वाला Issue / Alert मैसेज</label>
+          <div class="flex gap-1.5">
+            <input type="text" id="userIssueInput" placeholder="जैसे: KYC Verification Pending / Deposit Mismatch" class="flex-1 bg-[#0b1021] border border-[#35447a] rounded-xl px-3 py-2 text-xs text-white font-semibold outline-none focus:border-amber-400">
+            <button type="button" onclick="saveUserIssue()" class="bg-amber-500 hover:bg-amber-400 text-black font-extrabold px-3 rounded-xl text-[11px] active:scale-95">
+              Show Issue
+            </button>
+            <button type="button" onclick="clearUserIssue()" class="bg-[#25346e] text-slate-200 font-bold px-2.5 rounded-xl text-[11px]">
+              Clear
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. DEPOSIT CONTROL (REJECT / APPROVE / COMPLETE / PROCESSING) -->
+      <div class="bg-[#1c2754] border border-[#2f3f80] rounded-2xl p-3 space-y-2 text-xs">
+        <div class="flex justify-between items-center">
+          <span class="font-extrabold text-emerald-400">📥 Deposit Control</span>
+          <span id="accDepStatusBadge" class="px-2 py-0.5 rounded-md bg-[#131b3a] text-amber-300 font-mono text-[11px]">None</span>
+        </div>
+        <div class="grid grid-cols-4 gap-1.5 pt-1">
+          <button type="button" onclick="updateTxStatus('deposit', 'Approved')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-1.5 rounded-lg text-[11px] active:scale-95">
+            Approve
+          </button>
+          <button type="button" onclick="updateTxStatus('deposit', 'Completed')" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold py-1.5 rounded-lg text-[11px] active:scale-95">
+            Complete
+          </button>
+          <button type="button" onclick="updateTxStatus('deposit', 'Processing')" class="bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-1.5 rounded-lg text-[11px] active:scale-95">
+            Process
+          </button>
+          <button type="button" onclick="updateTxStatus('deposit', 'Rejected')" class="bg-rose-600 hover:bg-rose-500 text-white font-extrabold py-1.5 rounded-lg text-[11px] active:scale-95">
+            Reject
+          </button>
+        </div>
+      </div>
+
+      <!-- 4. WITHDRAW CONTROL (REJECT / COMPLETE / APPROVE / PROCESS) -->
+      <div class="bg-[#1c2754] border border-[#2f3f80] rounded-2xl p-3 space-y-2 text-xs">
+        <div class="flex justify-between items-center">
+          <span class="font-extrabold text-amber-400">📤 Withdraw Control</span>
+          <span id="accWthStatusBadge" class="px-2 py-0.5 rounded-md bg-[#131b3a] text-amber-300 font-mono text-[11px]">None</span>
+        </div>
+        <div class="grid grid-cols-4 gap-1.5 pt-1">
+          <button type="button" onclick="updateTxStatus('withdraw', 'Approved')" class="bg-emerald-600 hover:bg-emerald-500 text-white font-extrabold py-1.5 rounded-lg text-[11px] active:scale-95">
+            Approve
+          </button>
+          <button type="button" onclick="updateTxStatus('withdraw', 'Completed')" class="bg-sky-600 hover:bg-sky-500 text-white font-extrabold py-1.5 rounded-lg text-[11px] active:scale-95">
+            Complete
+          </button>
+          <button type="button" onclick="updateTxStatus('withdraw', 'Processing')" class="bg-amber-500 hover:bg-amber-400 text-black font-extrabold py-1.5 rounded-lg text-[11px] active:scale-95">
+            Process
+          </button>
+          <button type="button" onclick="updateTxStatus('withdraw', 'Rejected')" class="bg-rose-600 hover:bg-rose-500 text-white font-extrabold py-1.5 rounded-lg text-[11px] active:scale-95">
+            Reject
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <div class="text-[10px] text-slate-400 text-center pt-1">
+      सूचना: यह एडमिन फ़ाइल वर्तमान में ब्राउज़र के <code>localStorage</code> पर काम करती है। अलग-अलग डिवाइस/यूज़र्स का डेटा एक जगह लाइव सिंक करने के लिए इसमें Firebase या Supabase जैसा क्लाउड डेटाबेस जोड़ा जा सकता है।
+    </div>
+  </div>
+
+  <!-- ADD NEW USER MODAL -->
+  <div id="newUserModal" class="hidden fixed inset-0 z-50 bg-black/80 flex items-center justify-center p-4">
+    <div class="w-full max-w-[380px] bg-[#18224a] border border-sky-400/50 rounded-2xl p-4 space-y-3 text-xs shadow-2xl">
+      <div class="flex justify-between items-center border-b border-[#2e3f82] pb-2">
+        <span class="font-black text-sm text-emerald-400">+ नया यूज़र अकाउंट जोड़ें</span>
+        <button type="button" onclick="closeNewUserModal()" class="text-slate-400 font-bold">✕</button>
+      </div>
+      <div>
+        <label class="block text-slate-300 font-bold mb-1">10-Digit Mobile Number</label>
+        <input type="tel" id="newUserPhone" maxlength="10" placeholder="e.g. 9876543210" class="w-full bg-[#0b1021] border border-[#35447a] rounded-xl px-3 py-2 text-white font-bold outline-none">
+      </div>
+      <div>
+        <label class="block text-slate-300 font-bold mb-1">UID (खाली छोड़ने पर अपने-आप बनेगा)</label>
+        <input type="text" id="newUserUid" placeholder="8-digit UID (Optional)" class="w-full bg-[#0b1021] border border-[#35447a] rounded-xl px-3 py-2 text-white font-mono font-bold outline-none">
+      </div>
+      <div>
+        <label class="block text-slate-300 font-bold mb-1">Initial Balance (₹)</label>
+        <input type="number" id="newUserBal" value="0" min="0" class="w-full bg-[#0b1021] border border-[#35447a] rounded-xl px-3 py-2 text-white font-black outline-none">
+      </div>
+      <div class="flex gap-2 pt-1">
+        <button type="button" onclick="closeNewUserModal()" class="flex-1 py-2.5 rounded-xl bg-[#25346e] text-slate-300 font-bold">Cancel</button>
+        <button type="button" onclick="saveNewUser()" class="flex-1 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 text-white font-black">Create & Access</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let selectedUid = null;
+
+    function showAdmToast(ico, msg) {
+      const box = document.getElementById('admToast');
+      document.getElementById('admToastIco').innerText = ico;
+      document.getElementById('admToastTxt').innerText = msg;
+      box.classList.remove('hidden');
+      clearTimeout(window._admToastTimer);
+      window._admToastTimer = setTimeout(() => box.classList.add('hidden'), 2600);
+    }
+
+    function loadDB() {
+      return JSON.parse(localStorage.getItem('star_admin_users_db') || '[]');
+    }
+
+    function saveDB(db) {
+      localStorage.setItem('star_admin_users_db', JSON.stringify(db));
+      syncActiveSessionIfMatch(db);
+      renderStatsAndList(db);
+    }
+
+    function syncActiveSessionIfMatch(db) {
+      const activePhone = localStorage.getItem('star_session_user');
+      if (!activePhone) return;
+      const matched = db.find(u => String(u.phone) === String(activePhone));
+      if (!matched) return;
+
+      localStorage.setItem('star_wallet_bal', Number(matched.balance || 0).toFixed(2));
+      localStorage.setItem('star_active_uid', String(matched.uid));
+      localStorage.setItem('star_user_blocked_' + matched.uid, matched.blocked ? '1' : '0');
+      localStorage.setItem('star_user_issue_' + matched.uid, matched.issue || '');
+    }
+
+    function generateUniqueUID(db) {
+      let uid = '';
+      do {
+        uid = String(Math.floor(10000000 + Math.random() * 89999999));
+      } while (db.some(u => String(u.uid) === uid));
+      return uid;
+    }
+
+    function renderStatsAndList(filteredList) {
+      const db = loadDB();
+      const list = filteredList || db;
+
+      const blockedCount = db.filter(u => !!u.blocked).length;
+      const totalBal = db.reduce((sum, u) => sum + (Number(u.balance) || 0), 0);
+
+      document.getElementById('statTotalUsers').innerText = db.length;
+      document.getElementById('statBlockedUsers').innerText = blockedCount;
+      document.getElementById('statTotalBal').innerText = '₹' + totalBal.toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      document.getElementById('listMatchCount').innerText = list.length + ' users';
+
+      const box = document.getElementById('usersDirectoryBox');
+      if (!list.length) {
+        box.innerHTML = `<div class="bg-[#1c2754] border border-[#2f3f80] rounded-xl p-3 text-center text-xs text-slate-400">कोई अकाउंट नहीं मिला। + New User से जोड़ें।</div>`;
+        return;
+      }
+
+      box.innerHTML = list.map(u => {
+        const isSelected = String(u.uid) === String(selectedUid);
+        const statusTag = u.blocked
+          ? `<span class="text-[10px] font-black bg-rose-500/20 text-rose-300 px-2 py-0.5 rounded-full">BLOCKED</span>`
+          : `<span class="text-[10px] font-black bg-emerald-500/20 text-emerald-300 px-2 py-0.5 rounded-full">ACTIVE</span>`;
+        return `
+          <div onclick="openAccountWorkspace('${u.uid}')" class="${isSelected ? 'bg-[#26387a] border-sky-400' : 'bg-[#1c2754] hover:bg-[#233169] border-[#2f3f80]'} border rounded-xl px-3 py-2 flex justify-between items-center cursor-pointer transition text-xs">
+            <div class="min-w-0">
+              <div class="flex items-center gap-1.5">
+                <span class="font-black text-sky-300 font-mono">UID: ${u.uid}</span>
+                <span class="text-slate-200 font-bold">📱 ${u.phone}</span>
+                ${statusTag}
+              </div>
+              ${u.issue ? `<div class="text-[10px] text-amber-300 truncate mt-0.5">⚠️ ${u.issue}</div>` : ''}
+            </div>
+            <span class="font-black text-amber-400 shrink-0 ml-2">₹${Number(u.balance || 0).toFixed(2)}</span>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function searchAccount() {
+      const q = (document.getElementById('searchQueryInput')?.value || '').trim().toLowerCase();
+      const db = loadDB();
+      if (!q) {
+        renderStatsAndList(db);
+        return;
+      }
+      const matches = db.filter(u =>
+        String(u.uid).toLowerCase().includes(q) || String(u.phone).toLowerCase().includes(q)
+      );
+      renderStatsAndList(matches);
+      if (matches.length >= 1) {
+        openAccountWorkspace(matches[0].uid);
+        showAdmToast('🔓', `Account Accessed: UID ${matches[0].uid}`);
+      } else {
+        showAdmToast('⚠️', 'इस UID या Mobile Number का अकाउंट नहीं मिला');
+      }
+    }
+
+    function resetSearch() {
+      document.getElementById('searchQueryInput').value = '';
+      renderStatsAndList(loadDB());
+    }
+
+    function openAccountWorkspace(uid) {
+      const db = loadDB();
+      const user = db.find(u => String(u.uid) === String(uid));
+      if (!user) return;
+      selectedUid = String(user.uid);
+
+      document.getElementById('accountAccessPanel').classList.remove('hidden');
+      document.getElementById('accPanelName').innerText = user.name || ('MEMBER' + String(user.phone).slice(-6));
+      document.getElementById('accPanelMeta').innerText = `UID: ${user.uid} | Mobile: ${user.phone}`;
+      document.getElementById('accPanelBalance').innerText = '₹' + Number(user.balance || 0).toLocaleString('en-IN', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+      const badge = document.getElementById('accStatusBadge');
+      if (user.blocked) {
+        badge.innerText = 'BLOCKED';
+        badge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black bg-rose-600 text-white';
+      } else {
+        badge.innerText = 'ACTIVE';
+        badge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black bg-emerald-500/20 text-emerald-300 border border-emerald-400/40';
+      }
+
+      document.getElementById('accPanelIssueDisplay').innerText = user.issue
+        ? `Issue / Alert: ${user.issue}`
+        : 'Issue / Alert: कोई इशू नहीं';
+      document.getElementById('userIssueInput').value = user.issue || '';
+
+      const dep = user.lastDeposit || { amount: 0, status: 'None' };
+      const wth = user.lastWithdraw || { amount: 0, status: 'None' };
+      document.getElementById('accDepStatusBadge').innerText = `${dep.status} (₹${Number(dep.amount || 0)})`;
+      document.getElementById('accWthStatusBadge').innerText = `${wth.status} (₹${Number(wth.amount || 0)})`;
+
+      renderStatsAndList(db);
+    }
+
+    function modifyUserWallet(mode) {
+      if (!selectedUid) return;
+      const amt = parseFloat(document.getElementById('amountActionInput')?.value);
+      if (isNaN(amt) || amt < 0) {
+        showAdmToast('⚠️', 'कृपया सही अमाउंट डालें');
+        return;
+      }
+      const db = loadDB();
+      const user = db.find(u => String(u.uid) === String(selectedUid));
+      if (!user) return;
+
+      const curBal = Number(user.balance) || 0;
+      if (mode === 'add') user.balance = +(curBal + amt).toFixed(2);
+      else if (mode === 'sub') user.balance = Math.max(0, +(curBal - amt).toFixed(2));
+      else if (mode === 'set') user.balance = +amt.toFixed(2);
+
+      saveDB(db);
+      openAccountWorkspace(user.uid);
+      showAdmToast('💰', `Balance Updated: ₹${user.balance.toFixed(2)}`);
+    }
+
+    function giveUserBonus(bonusAmt, reason) {
+      if (!selectedUid) return;
+      const db = loadDB();
+      const user = db.find(u => String(u.uid) === String(selectedUid));
+      if (!user) return;
+
+      user.balance = +((Number(user.balance) || 0) + Number(bonusAmt)).toFixed(2);
+      user.lastBonus = { amount: Number(bonusAmt), reason: reason || 'Admin Bonus', time: new Date().toLocaleString('en-IN') };
+      saveDB(db);
+      openAccountWorkspace(user.uid);
+      showAdmToast('🎁', `₹${bonusAmt} ${reason} दिया गया!`);
+    }
+
+    function giveCustomBonus() {
+      const amt = parseFloat(document.getElementById('amountActionInput')?.value);
+      if (isNaN(amt) || amt <= 0) {
+        showAdmToast('⚠️', 'ऊपर Amount बॉक्स में बोनस अमाउंट डालें');
+        return;
+      }
+      giveUserBonus(amt, 'Special Bonus');
+    }
+
+    function setAccountBlockState(blockFlag) {
+      if (!selectedUid) return;
+      const db = loadDB();
+      const user = db.find(u => String(u.uid) === String(selectedUid));
+      if (!user) return;
+
+      user.blocked = !!blockFlag;
+      saveDB(db);
+      openAccountWorkspace(user.uid);
+      showAdmToast(blockFlag ? '🚫' : '✅', blockFlag ? `UID ${user.uid} Account Blocked` : `UID ${user.uid} Account Unblocked`);
+    }
+
+    function saveUserIssue() {
+      if (!selectedUid) return;
+      const issueText = (document.getElementById('userIssueInput')?.value || '').trim();
+      if (!issueText) {
+        showAdmToast('⚠️', 'कृपया Issue मैसेज लिखें');
+        return;
+      }
+      const db = loadDB();
+      const user = db.find(u => String(u.uid) === String(selectedUid));
+      if (!user) return;
+
+      user.issue = issueText;
+      saveDB(db);
+      openAccountWorkspace(user.uid);
+      showAdmToast('⚠️', 'यूज़र के लिए Issue सेट हो गया');
+    }
+
+    function clearUserIssue() {
+      if (!selectedUid) return;
+      const db = loadDB();
+      const user = db.find(u => String(u.uid) === String(selectedUid));
+      if (!user) return;
+
+      user.issue = '';
+      document.getElementById('userIssueInput').value = '';
+      saveDB(db);
+      openAccountWorkspace(user.uid);
+      showAdmToast('✅', 'Issue हटा दिया गया');
+    }
+
+    function updateTxStatus(type, status) {
+      if (!selectedUid) return;
+      const db = loadDB();
+      const user = db.find(u => String(u.uid) === String(selectedUid));
+      if (!user) return;
+
+      const inputAmt = parseFloat(document.getElementById('amountActionInput')?.value);
+      if (type === 'deposit') {
+        const prevAmt = user.lastDeposit?.amount || 0;
+        user.lastDeposit = {
+          amount: (!isNaN(inputAmt) && inputAmt > 0) ? inputAmt : prevAmt,
+          status: status,
+          updatedAt: new Date().toLocaleString('en-IN')
+        };
+      } else {
+        const prevAmt = user.lastWithdraw?.amount || 0;
+        user.lastWithdraw = {
+          amount: (!isNaN(inputAmt) && inputAmt > 0) ? inputAmt : prevAmt,
+          status: status,
+          updatedAt: new Date().toLocaleString('en-IN')
+        };
+      }
+
+      saveDB(db);
+      openAccountWorkspace(user.uid);
+      showAdmToast('✅', `${type.toUpperCase()} → ${status}`);
+    }
+
+    function createNewUserModal() {
+      document.getElementById('newUserPhone').value = '';
+      document.getElementById('newUserUid').value = '';
+      document.getElementById('newUserBal').value = '0';
+      document.getElementById('newUserModal').classList.remove('hidden');
+    }
+
+    function closeNewUserModal() {
+      document.getElementById('newUserModal').classList.add('hidden');
+    }
+
+    function saveNewUser() {
+      const phone = (document.getElementById('newUserPhone')?.value || '').trim();
+      let customUid = (document.getElementById('newUserUid')?.value || '').trim();
+      const bal = Math.max(0, parseFloat(document.getElementById('newUserBal')?.value) || 0);
+
+      if (phone.length !== 10 || !/^\d+$/.test(phone)) {
+        showAdmToast('⚠️', 'कृपया सही 10-अंकों का मोबाइल नंबर डालें');
+        return;
+      }
+
+      const db = loadDB();
+      if (db.some(u => String(u.phone) === phone)) {
+        showAdmToast('ℹ️', 'यह नंबर पहले से मौजूद है, अकाउंट खोला जा रहा है');
+        const existing = db.find(u => String(u.phone) === phone);
+        closeNewUserModal();
+        openAccountWorkspace(existing.uid);
+        return;
+      }
+
+      if (!customUid || db.some(u => String(u.uid) === customUid)) {
+        customUid = generateUniqueUID(db);
+      }
+
+      const newRec = {
+        uid: customUid,
+        phone: phone,
+        name: 'MEMBER' + phone.slice(-6),
+        balance: bal,
+        blocked: false,
+        issue: '',
+        lastDeposit: { amount: 0, status: 'None' },
+        lastWithdraw: { amount: 0, status: 'None' }
+      };
+
+      db.unshift(newRec);
+      saveDB(db);
+      closeNewUserModal();
+      openAccountWorkspace(newRec.uid);
+      showAdmToast('🎉', `नया यूज़र बना: UID ${newRec.uid}`);
+    }
+
+    window.onload = function () {
+      const db = loadDB();
+      renderStatsAndList(db);
+      if (db.length > 0) {
+        openAccountWorkspace(db[0].uid);
+      }
+    };
+  </script>
+
+  <script>
+    (function () {
+      const FB_DB_URL = "https://starwinn-live-99bf5-default-rtdb.firebaseio.com";
+
+      async function fbPullAllUsers() {
+        try {
+          const res = await fetch(`${FB_DB_URL}/users.json`);
+          if (!res.ok) return null;
+          const data = await res.json();
+          if (!data || typeof data !== "object") return [];
+          return Object.values(data).filter(u => u && u.uid);
+        } catch (err) {
+          return null;
+        }
+      }
+
+      async function fbSaveSingleUser(userObj) {
+        if (!userObj || !userObj.uid) return;
+        try {
+          await fetch(`${FB_DB_URL}/users/${encodeURIComponent(String(userObj.uid))}.json`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify(userObj)
+          });
+        } catch (err) {}
+      }
+
+      const origSaveDB = window.saveDB;
+      window.saveDB = function (db) {
+        if (typeof origSaveDB === "function") {
+          origSaveDB(db);
+        }
+        if (Array.isArray(db)) {
+          db.forEach(u => fbSaveSingleUser(u));
+        }
+      };
+
+      async function fbRefreshAdminList() {
+        const cloudUsers = await fbPullAllUsers();
+        if (!Array.isArray(cloudUsers)) return;
+
+        const localDb = JSON.parse(localStorage.getItem("star_admin_users_db") || "[]");
+        const mapByUid = new Map();
+
+        localDb.forEach(u => {
+          if (u && u.uid) mapByUid.set(String(u.uid), u);
+        });
+        cloudUsers.forEach(cu => {
+          const prev = mapByUid.get(String(cu.uid)) || {};
+          mapByUid.set(String(cu.uid), Object.assign({}, prev, cu));
+        });
+
+        const merged = Array.from(mapByUid.values());
+        localStorage.setItem("star_admin_users_db", JSON.stringify(merged));
+        if (typeof renderStatsAndList === "function") {
+          renderStatsAndList(merged);
+        }
+        if (typeof selectedUid !== "undefined" && selectedUid && typeof openAccountWorkspace === "function") {
+          const stillExists = merged.some(u => String(u.uid) === String(selectedUid));
+          if (stillExists) {
+            const panelVisible = !document.getElementById("accountAccessPanel")?.classList.contains("hidden");
+            if (!panelVisible) openAccountWorkspace(selectedUid);
+          }
+        }
+      }
+
+      window.addEventListener("DOMContentLoaded", () => {
+        setTimeout(fbRefreshAdminList, 250);
+        setInterval(fbRefreshAdminList, 2500);
+      });
+      window.addEventListener("focus", fbRefreshAdminList);
+    })();
+  </script>
+</body>
+</html>
