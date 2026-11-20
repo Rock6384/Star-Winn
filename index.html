@@ -5167,128 +5167,7 @@
     }
 
 
-  // ==========================================
-  // STARWINN LIVE RENDER BACKEND (DEPOSIT, UTR, ADMIN APPROVAL, WALLET SYNC)
-  // ==========================================
-  (function initStarWinnLiveLedger() {
-    const LIVE_API = "https://star-winn-server.onrender.com";
-    let liveOrderId = "";
-
-    function getCurrentUid() {
-      return localStorage.getItem("star_active_uid") || localStorage.getItem("star_session_user") || "";
-    }
-
-    window.swCreateBackendOrder = async function (amount) {
-      const uid = getCurrentUid();
-      const numAmt = Number(amount);
-      if (!uid) {
-        showToast("⚠️", "पहले लॉगिन या रजिस्टर करें ताकि UID मिल सके।");
-        return null;
-      }
-      if (!Number.isFinite(numAmt) || numAmt < 10) {
-        showToast("⚠️", "सही अमाउंट दर्ज करें।");
-        return null;
-      }
-
-      const res = await fetch(`${LIVE_API}/api/deposit/create`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ uid, amount: numAmt })
-      });
-      const data = await res.json();
-      if (!res.ok || !data.ok) {
-        throw new Error(data.error || "ऑर्डर नहीं बन पाया");
-      }
-      liveOrderId = data.order.orderId;
-      return data;
-    };
-
-    window.swSubmitBackendUtr = async function (utr, orderId = liveOrderId) {
-      const cleanUtr = String(utr || "").trim();
-      if (!orderId) throw new Error("पहले Deposit Order बनाएं।");
-      if (cleanUtr.length < 6) throw new Error("कम से कम 6 अंकों का UTR डालें।");
-
-      const res = await fetch(`${LIVE_API}/api/deposit/submit-utr`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ orderId, utr: cleanUtr })
-      });
-      const data = await res.json();
-      if (!res.ok || !data.ok) {
-        throw new Error(data.error || "UTR सबमिट नहीं हो पाया");
-      }
-      return data.order;
-    };
-
-    window.swSyncBackendWallet = async function () {
-      const uid = getCurrentUid();
-      if (!uid) return;
-      try {
-        const res = await fetch(`${LIVE_API}/api/wallet/${encodeURIComponent(uid)}`);
-        const data = await res.json();
-        if (res.ok && data.ok) {
-          if (typeof data.balance === "number") {
-            walletBalance = data.balance;
-            localStorage.setItem("star_wallet_bal", walletBalance.toFixed(2));
-          }
-          if (Array.isArray(data.deposits)) {
-            depositHistory = data.deposits.map(d => ({
-              orderNumber: d.orderId,
-              date: String(d.createdAt || "").slice(0, 10),
-              time: d.createdAt ? new Date(d.createdAt).toLocaleString("en-IN") : "",
-              channel: "Direct Account / UPI",
-              amount: Number(d.amount || 0),
-              status: d.status === "credited" ? "Success" : (d.status === "rejected" ? "Rejected" : "Pending"),
-              reference: d.utr || ""
-            }));
-            localStorage.setItem("star_dep_logs", JSON.stringify(depositHistory));
-            if (typeof renderDepositHistoryRows === "function") renderDepositHistoryRows();
-          }
-          if (typeof updateBalanceDisplays === "function") updateBalanceDisplays();
-        }
-      } catch (_) {}
-    };
-
-    window.swAdminFetchDeposits = async function (status = "pending_approval") {
-      const inp = document.getElementById("swLiveAdminToken");
-      const token = (inp && inp.value.trim()) || sessionStorage.getItem("sw_live_admin_token") || "";
-      const box = document.getElementById("swLiveAdminList");
-      if (!token) {
-        if (box) box.innerHTML = `<div class="text-rose-400">पहले ADMIN_TOKEN डालें।</div>`;
-        return;
-      }
-      sessionStorage.setItem("sw_live_admin_token", token);
-
-      const qs = status ? `?status=${encodeURIComponent(status)}` : "";
-      const res = await fetch(`${LIVE_API}/api/admin/deposits${qs}`, {
-        headers: { "x-admin-token": token }
-      });
-      const data = await res.json();
-      if (!res.ok || !data.ok) {
-        if (box) box.innerHTML = `<div class="text-rose-400">${data.error || "लोड नहीं हो पाया"}</div>`;
-        return;
-      }
-      if (!data.deposits || !data.deposits.length) {
-        if (box) box.innerHTML = `<div class="text-slate-400">कोई रिक्वेस्ट नहीं मिली।</div>`;
-        return;
-      }
-
-      if (box) {
-        box.innerHTML = data.deposits.map((item) => `
-          <div class="bg-[#0d142e] border border-[#2d3b70] rounded-xl p-2.5 space-y-1">
-            <div class="flex justify-between font-bold text-white">
-              <span>UID: ${item.uid}</span>
-              <span class="text-emerald-400">₹${item.amount}</span>
             </div>
-            <div class="text-[11px] text-slate-300">Order: <span class="font-mono">${item.orderId}</span></div>
-            <div class="text-[11px] text-amber-300">UTR: <span class="font-mono">${item.utr || "-"}</span> • Status: ${item.status}</div>
-            ${item.status === "pending_approval" ? `
-              <div class="flex gap-2 pt-1.5">
-                <button type="button" onclick="swAdminReview('${item.orderId}', 'approve')" class="flex-1 py-1.5 rounded-lg bg-emerald-600 text-white font-extrabold">Approve & Credit</button>
-                <button type="button" onclick="swAdminReview('${item.orderId}', 'reject')" class="flex-1 py-1.5 rounded-lg bg-rose-600 text-white font-extrabold">Reject</button>
-              </div>
-            ` : ""}
-          </div>
         `).join("");
       }
     };
@@ -5337,3 +5216,5 @@
 </script>
 </body>
 </html>
+
+    window.swAdminFetchDep
