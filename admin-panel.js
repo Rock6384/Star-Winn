@@ -345,3 +345,4 @@
   });
   setTimeout(upgradeAdminPanelUi, 800);
 })();
+            
